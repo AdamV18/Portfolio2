@@ -60,7 +60,7 @@ class Model{
         }
         if (base.equals("Informatik")) {
             return Arrays.asList("Organisatorisk forandring og IT",
-                    "BANDIT","Interactive Digital Systems" );
+                    "BANDIT","Webbased IT-System" );
         }
         if (base.equals("Astrology")) {
             return Arrays.asList("Essential Astrology",
