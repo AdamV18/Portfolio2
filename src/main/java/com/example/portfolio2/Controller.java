@@ -10,38 +10,5 @@ public class Controller {
         this.view = view;
     }
 
-    void selectSubject(String subject) {
 
-    }
-    /*
-    void enterText(String s){
-        model.add(s);
-        view.clearField();
-        String toarea="";
-        for(String t:model.get()){
-            toarea+=t+"\n";
-        }
-        view.setArea(toarea);
-    }
-
-    void deleteLastEntry() {
-        if (!model.list.isEmpty()) {
-            model.list.removeLast();
-            updateArea();
-        }
-    }
-
-    void deleteAllEntries() {
-        model.list.clear();
-        updateArea();
-    }
-
-
-    void updateArea() {
-        StringBuilder toarea = new StringBuilder();
-        for (String t : model.get()) {
-            toarea.append(t).append("\n");
-        }
-        view.setArea(toarea.toString());
-    }*/
 }
