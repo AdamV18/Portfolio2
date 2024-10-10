@@ -2,14 +2,18 @@ package com.example.portfolio2;
 import java.util.ArrayList;
 
 public class Controller {
-    private ModelOld model;
+    private Model model;
     private HelloApplication view;
 
-    Controller(ModelOld model, HelloApplication view) {
+    Controller(Model model, HelloApplication view) {
         this.model = model;
         this.view = view;
     }
 
+    void selectSubject(String subject) {
+
+    }
+    /*
     void enterText(String s){
         model.add(s);
         view.clearField();
@@ -39,5 +43,5 @@ public class Controller {
             toarea.append(t).append("\n");
         }
         view.setArea(toarea.toString());
-    }
+    }*/
 }

@@ -5,9 +5,9 @@ import java.util.*;
 
 
 class Model{
-    List<String> baseProgram(){return Arrays.asList("NatBach","HumTek");}
-    List<String> subjectModule(){return Arrays.asList("Computer Science","Informatik","Astronomy");}
-    List<String> baseCourse(String base){
+    public List<String> baseProgram(){return Arrays.asList("NatBach","HumTek");}
+    public List<String> subjectModule(){return Arrays.asList("Computer Science","Informatik","Astronomy");}
+    public List<String> baseCourse(String base){
         if(base.equals("NatBach")) {
             return Arrays.asList(
                     "BK1 Empirical Data",
