@@ -16,6 +16,28 @@ public class HelloApplication extends Application {
     private Model model = new Model();
     private Controller con = new Controller(model, this);
 
+    public ComboBox<String> comboProgram = createCombobox();
+    public ComboBox<String> comboSub1 = createCombobox();
+    public ComboBox<String> comboSub2 = createCombobox();
+    public ComboBox<String> comboElective = createCombobox();
+    public ComboBox<String> comboBasicCourse = createCombobox();
+
+    public Button buttonProgram = createButton("Select");
+    public Button buttonSub1 = createButton("Select");
+    public Button buttonSub2 = createButton("Select");
+    public Button addProgram = createButton("Add Course");
+    public Button addElective = createButton("Add Course");
+
+    public TextArea textAreaProgram = createTextArea();
+    public TextArea textAreaSub1 = createTextArea();
+    public TextArea textAreaSub2 = createTextArea();
+    public TextArea textAreaElective = createTextArea();
+
+    public Label crProgram = createLabel("Credits: ");
+    public Label crSub1 = createLabel("Credits: ");
+    public Label crSub2 = createLabel("Credits: ");
+    public Label crElective = createLabel("Credits: ");
+
     @Override
     public void start(Stage stage) {
 
@@ -26,27 +48,9 @@ public class HelloApplication extends Application {
         Label course1 = createLabel("Choose Course");
         Label course2 = createLabel("Choose Course");
 
-        ComboBox<String> comboProgram = createCombobox();
-        ComboBox<String> comboSub1 = createCombobox();
-        ComboBox<String> comboSub2 = createCombobox();
-        ComboBox<String> comboElective = createCombobox();
-        ComboBox<String> comboBasicCourse = createCombobox();
+        //Fill Label, Boxes
+        con.fillComboBox();
 
-        Button buttonProgram = createButton("Select");
-        Button buttonSub1 = createButton("Select");
-        Button buttonSub2 = createButton("Select");
-        Button addProgram = createButton("Add Course");
-        Button addElective = createButton("Add Course");
-
-        TextArea textAreaProgram = createTextArea();
-        TextArea textAreaSub1 = createTextArea();
-        TextArea textAreaSub2 = createTextArea();
-        TextArea textAreaElective = createTextArea();
-
-        Label crProgram = createLabel("Credits: ");
-        Label crSub1 = createLabel("Credits: ");
-        Label crSub2 = createLabel("Credits: ");
-        Label crElective = createLabel("Credits: ");
 
         // Set up GridPane layout
         GridPane root = new GridPane();
@@ -95,6 +99,8 @@ public class HelloApplication extends Application {
         stage.setTitle("JavaFX Demo");
         stage.setScene(scene);
         stage.show();
+
+
     }
 
     public static void main(String[] args) {
@@ -124,6 +130,8 @@ public class HelloApplication extends Application {
     TextArea createTextArea() {
         TextArea textArea = new TextArea();
         textArea.setPrefSize(200, 300);
+        textArea.setEditable(false);
+
         return textArea;
     }
 }
