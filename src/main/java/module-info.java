@@ -7,4 +7,6 @@ module com.example.portfolio2 {
 
     opens com.example.portfolio2 to javafx.fxml;
     exports com.example.portfolio2;
+    exports com.example.portfolio2.exercicesoops;
+    opens com.example.portfolio2.exercicesoops to javafx.fxml;
 }
