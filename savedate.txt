@@ -1,3 +1,4 @@
+
 -- Table: BasicCourse
 CREATE TABLE BasicCourse (
                              BasCourseID INTEGER PRIMARY KEY,
