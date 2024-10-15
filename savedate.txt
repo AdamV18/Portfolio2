@@ -1,0 +1,73 @@
+-- Table: BasicCourse
+CREATE TABLE BasicCourse (
+                             BasCourseID INTEGER PRIMARY KEY,
+                             BasCourseECTS INTEGER,
+                             BasCourseDesc TEXT,
+                             ProgID INTEGER,
+                             FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+-- Table: BasicProject
+CREATE TABLE BasicProject (
+                              BasProjectID INTEGER PRIMARY KEY,
+                              BasProjECTS INTEGER,
+                              BasProjDesc TEXT,
+                              ProgID INTEGER,
+                              FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+-- Table: ElectiveCourse
+CREATE TABLE ElectiveCourse (
+                                ElCourseID INTEGER PRIMARY KEY,
+                                Type TEXT,
+                                ElCourseECTS INTEGER,
+                                ElCourseDesc TEXT,
+                                ProgID INTEGER,
+                                FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+-- Table: SubjectModule
+CREATE TABLE SubjectModule (
+                               ModuleID INTEGER PRIMARY KEY,
+                               ModuleName TEXT,
+                               ModuleECTS INTEGER,
+                               ModuleDesc TEXT,
+                               ProgID INTEGER,
+                               FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+-- Table: ModuleCourse
+CREATE TABLE ModuleCourse (
+                              ModCourseID INTEGER PRIMARY KEY,
+                              ModCourseECTS INTEGER,
+                              ModCourseDesc TEXT,
+                              ModuleID INTEGER,
+                              FOREIGN KEY (ModuleID) REFERENCES SubjectModule(ModuleID)
+);
+
+-- Table: ModuleProject
+CREATE TABLE ModuleProject (
+                               ModProjectID INTEGER PRIMARY KEY,
+                               ModProjectECTS INTEGER,
+                               ModProjectDesc TEXT,
+                               ModuleID INTEGER,
+                               FOREIGN KEY (ModuleID) REFERENCES SubjectModule(ModuleID)
+);
+
+-- Table: BachelorProject
+CREATE TABLE BachelorProject (
+                                 BachProjectID INTEGER PRIMARY KEY,
+                                 BachProjECTS INTEGER,
+                                 BachProjDesc TEXT,
+                                 ProgID INTEGER,
+                                 FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+-- Table: Student
+CREATE TABLE Student (
+                         StudID INTEGER PRIMARY KEY,
+                         StudName TEXT,
+                         StudEmail TEXT,
+                         ProgID INTEGER,
+                         FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
