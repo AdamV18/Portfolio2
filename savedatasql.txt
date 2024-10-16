@@ -1,0 +1,90 @@
+-- Sqlite does not check that foreign keys do exist as primary keys by default, Write this to force this check
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE BachelorProgramme (
+                                   ProgID INTEGER PRIMARY KEY,
+                                   ProgName VARCHAR(255) NOT NULL,
+                                   ProgDesc TEXT NOT NULL,
+                                   ProgECTS INTEGER NOT NULL
+);
+
+
+CREATE TABLE Student (
+                         StudID INTEGER PRIMARY KEY,
+                         StudName VARCHAR(255) NOT NULL,
+                         StudSurname VARCHAR(255) NOT NULL,
+                         StudEmail VARCHAR(255) NOT NULL UNIQUE,
+                         ProgID INTEGER NOT NULL,
+                         FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+
+CREATE TABLE BasicCourse (
+                             BasCourseID INTEGER PRIMARY KEY,
+                             BasCourseName VARCHAR(255) NOT NULL UNIQUE,
+                             BasCourseECTS INTEGER NOT NULL,
+                             BasCourseDesc TEXT UNIQUE,
+                             ProgID INTEGER NOT NULL,
+                             FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+
+CREATE TABLE BasicProject (
+                              BasProjectID INTEGER PRIMARY KEY,
+                              BasProjName VARCHAR(255) NOT NULL UNIQUE,
+                              BasProjECTS INTEGER NOT NULL,
+                              BasProjDesc TEXT UNIQUE,
+                              ProgID INTEGER NOT NULL,
+                              FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+
+CREATE TABLE SubjectModule (
+                               ModuleID INTEGER PRIMARY KEY,
+                               ModuleName VARCHAR(255) NOT NULL UNIQUE,
+                               ModuleECTS INTEGER NOT NULL,
+                               ModuleDesc TEXT UNIQUE,
+                               ProgID INTEGER NOT NULL,
+                               FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+
+CREATE TABLE ModuleCourse (
+                              ModCourseID INTEGER PRIMARY KEY,
+                              ModCourseName VARCHAR(255) NOT NULL UNIQUE,
+                              ModCourseECTS INTEGER NOT NULL,
+                              ModCourseDesc TEXT UNIQUE,
+                              ModuleID INTEGER NOT NULL,
+                              FOREIGN KEY (ModuleID) REFERENCES SubjectModule(ModuleID)
+);
+
+
+CREATE TABLE ModuleProject (
+                               ModProjectID INTEGER PRIMARY KEY,
+                               ModProjectName VARCHAR(255) NOT NULL UNIQUE,
+                               ModProjectECTS INTEGER NOT NULL,
+                               ModProjectDesc TEXT UNIQUE,
+                               ModuleID INTEGER NOT NULL,
+                               FOREIGN KEY (ModuleID) REFERENCES SubjectModule(ModuleID)
+);
+
+
+CREATE TABLE ElectiveCourse (
+                                ElCourseID INTEGER PRIMARY KEY,
+                                ElCourseName VARCHAR(255) NOT NULL UNIQUE,
+                                Type VARCHAR(255) NOT NULL,
+                                ElCourseECTS INTEGER NOT NULL,
+                                ElCourseDesc TEXT UNIQUE,
+                                ProgID INTEGER NOT NULL,
+                                FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
+
+
+CREATE TABLE BachelorProject (
+                                 BachProjectID INTEGER PRIMARY KEY,
+                                 BachProjName VARCHAR(255) NOT NULL UNIQUE,
+                                 BachProjECTS INTEGER NOT NULL,
+                                 BachProjDesc TEXT UNIQUE,
+                                 ProgID INTEGER NOT NULL,
+                                 FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+);
