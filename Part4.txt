@@ -1,0 +1,37 @@
+-- V1 Without selecting the student
+
+SELECT SUM(
+        bc.BasCourseECTS +
+        bp.BasProjECTS +
+        bachp.BachProjECTS +
+        mc.ModCourseECTS +
+        mp.ModProjectECTS +
+        ec.ElCourseECTS
+) AS total_ects
+FROM Student s
+         LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID
+         LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID
+         LEFT JOIN BasicCourse bc ON s.ProgID = bc.ProgID
+         LEFT JOIN ModuleProject mp ON s.ProgID = mp.ModuleID
+         LEFT JOIN ModuleCourse mc ON s.ProgID = mc.ModuleID
+         LEFT JOIN ElectiveCourse ec ON s.ProgID = ec.ProgID
+
+
+-- V2 With the selection of the student
+
+SELECT s.StudEmail, SUM(
+        bc.BasCourseECTS +
+        bp.BasProjECTS +
+        bachp.BachProjECTS +
+        mc.ModCourseECTS +
+        mp.ModProjectECTS +
+        ec.ElCourseECTS
+                  ) AS total_ects
+FROM Student s
+         LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID
+         LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID
+         LEFT JOIN BasicCourse bc ON s.ProgID = bc.ProgID
+         LEFT JOIN ModuleProject mp ON s.ProgID = mp.ModuleID
+         LEFT JOIN ModuleCourse mc ON s.ProgID = mc.ModuleID
+         LEFT JOIN ElectiveCourse ec ON s.ProgID = ec.ProgID
+         WHERE s.StudEmail = stud-perdrix@ruc.dk
