@@ -1,90 +1,258 @@
--- Sqlite does not check that foreign keys do exist as primary keys by default, Write this to force this check
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE BachelorProgramme (
-                                   ProgID INTEGER PRIMARY KEY,
-                                   ProgName VARCHAR(255) NOT NULL,
-                                   ProgDesc TEXT NOT NULL,
-                                   ProgECTS INTEGER NOT NULL
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `BachelorProgramme`
+--
+
+CREATE TABLE BachelorProgramme
+(
+    ProgID   INTEGER PRIMARY KEY,
+    ProgName VARCHAR(255) NOT NULL,
+    ProgECTS INTEGER      NOT NULL
 );
 
+INSERT INTO BachelorProgramme (ProgID, ProgName, ProgECTS)
+VALUES (1, 'NatBach', 180),
+       (2, 'HumTek', 180);
 
-CREATE TABLE Student (
-                         StudID INTEGER PRIMARY KEY,
-                         StudName VARCHAR(255) NOT NULL,
-                         StudSurname VARCHAR(255) NOT NULL,
-                         StudEmail VARCHAR(255) NOT NULL UNIQUE,
-                         ProgID INTEGER NOT NULL,
-                         FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `Student`
+--
+
+CREATE TABLE Student
+(
+    StudID      INTEGER PRIMARY KEY,
+    StudName    VARCHAR(255) NOT NULL,
+    StudSurname VARCHAR(255) NOT NULL,
+    StudEmail   VARCHAR(255) NOT NULL UNIQUE,
+    ProgID      INTEGER      NOT NULL,
+    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
 
+-- ----------------------------------------------------------------------------------------------------------------
 
-CREATE TABLE BasicCourse (
-                             BasCourseID INTEGER PRIMARY KEY,
-                             BasCourseName VARCHAR(255) NOT NULL UNIQUE,
-                             BasCourseECTS INTEGER NOT NULL,
-                             BasCourseDesc TEXT UNIQUE,
-                             ProgID INTEGER NOT NULL,
-                             FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+--
+-- Structure table `BasicCourse`
+--
+
+CREATE TABLE BasicCourse
+(
+    BasCourseID   INTEGER PRIMARY KEY,
+    BasCourseName VARCHAR(255) NOT NULL UNIQUE,
+    BasCourseECTS INTEGER      NOT NULL,
+    ProgID        INTEGER      NOT NULL,
+    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
 
+-- Inserting NatBach basic courses
+INSERT INTO BasicCourse (BasCourseID, BasCourseName, BasCourseECTS, ProgID)
+VALUES (1, 'BK1 Empirical Data', 5, 1),
+       (2, 'BK2 Experimental Methods', 5, 1),
+       (3, 'BK3 Theory of Natural Science', 5, 1),
+       (4, 'Logic and Discrete Mathematics', 5, 1),
+       (5, 'Functional Biology – Zoology', 5, 1),
+       (6, 'Linear Algebra', 5, 1),
+       (7, 'Organic Chemistry', 5, 1),
+       (8, 'Biological Chemistry', 5, 1),
+       (9, 'Statistical Models', 5, 1),
+       (10, 'Functional Programming and Language Implementations', 5, 1),
+       (11, 'Classical Mechanics', 5, 1),
+       (12, 'Environmental Science', 5, 1),
+       (13, 'Cell Biology', 5, 1),
+       (14, 'Functional biology – Botany', 5, 1),
+       (15, 'Supplementary Physics', 5, 1),
+       (16, 'Calculus', 5, 1),
+       (17, 'The Chemical Reaction', 5, 1),
+       (18, 'Scientific Computing', 5, 1),
+       (19, 'Energy and Climate Changes', 5, 1);
 
-CREATE TABLE BasicProject (
-                              BasProjectID INTEGER PRIMARY KEY,
-                              BasProjName VARCHAR(255) NOT NULL UNIQUE,
-                              BasProjECTS INTEGER NOT NULL,
-                              BasProjDesc TEXT UNIQUE,
-                              ProgID INTEGER NOT NULL,
-                              FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+
+-- Inserting HumTek basic courses
+INSERT INTO BasicCourse (BasCourseID, BasCourseName, BasCourseECTS, ProgID)
+VALUES (20, 'Design og Konstruktion I+Workshop', 5, 2),
+       (21, 'Subjektivitet, Teknologi og Samfund I', 5, 2),
+       (22, 'Teknologiske systemer og artefakter I', 5, 2),
+       (23, 'Videnskabsteori', 5, 2),
+       (24, 'Design og Konstruktion II+Workshop', 5, 2),
+       (25, 'Subjektivitet, Teknologi og Samfund II', 5, 2),
+       (26, 'Bæredygtige teknologier', 5, 2),
+       (27, 'Kunstig intelligens', 5, 2),
+       (28, 'Medier og teknologi - datavisualisering', 5, 2),
+       (29, 'Teknologiske Systemer og Artefakter II - Sundhedsteknologi', 5, 2),
+       (30, 'Den (in)humane storby', 5, 2),
+       (31, 'Interactive Design in the Field', 5, 2),
+       (32, 'Organisation og ledelse af designprocesser', 5, 2);
+
+
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `BasicProject`
+--
+
+CREATE TABLE BasicProject
+(
+    BasProjectID INTEGER PRIMARY KEY,
+    BasProjName  VARCHAR(255) NOT NULL UNIQUE,
+    BasProjECTS  INTEGER      NOT NULL,
+    ProgID       INTEGER      NOT NULL,
+    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
 
+-- Inserting NatBach basic projects
+INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+VALUES (1, 'BP1 NatBach', 15, 1),
+       (2, 'BP2 NatBach', 15, 1),
+       (3, 'BP3 NatBach', 15, 1);
 
-CREATE TABLE SubjectModule (
-                               ModuleID INTEGER PRIMARY KEY,
-                               ModuleName VARCHAR(255) NOT NULL UNIQUE,
-                               ModuleECTS INTEGER NOT NULL,
-                               ModuleDesc TEXT UNIQUE,
-                               ProgID INTEGER NOT NULL,
-                               FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+-- Inserting HumTek basic projects
+INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+VALUES (5, 'BP1 HumTek', 15, 2),
+       (6, 'BP2 HumTek', 15, 2),
+       (7, 'BP3 HumTek', 15, 2);
+
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `SubjectModule`
+--
+
+CREATE TABLE SubjectModule
+(
+    ModuleID   INTEGER PRIMARY KEY,
+    ModuleName VARCHAR(255) NOT NULL UNIQUE,
+    ModuleECTS INTEGER      NOT NULL,
+    ProgID     INTEGER      NOT NULL,
+    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
 
+-- Inserting subject modules
+INSERT INTO SubjectModule (ModuleID, ModuleName, ModuleECTS, ProgID)
+VALUES (1, 'Computer Science', 35, 1),
+       (2, 'Physics', 35, 1),
+       (3, 'Informatik', 35, 2),
+       (4, 'Chemistry', 35, 1),
+       (5, 'Mathematics', 35, 1),
+       (6, 'Molecular Biology', 35, 1),
+       (7, 'Astronomy', 35, 1);
 
-CREATE TABLE ModuleCourse (
-                              ModCourseID INTEGER PRIMARY KEY,
-                              ModCourseName VARCHAR(255) NOT NULL UNIQUE,
-                              ModCourseECTS INTEGER NOT NULL,
-                              ModCourseDesc TEXT UNIQUE,
-                              ModuleID INTEGER NOT NULL,
-                              FOREIGN KEY (ModuleID) REFERENCES SubjectModule(ModuleID)
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `ModuleCourse`
+--
+
+CREATE TABLE ModuleCourse
+(
+    ModCourseID   INTEGER PRIMARY KEY,
+    ModCourseName VARCHAR(255) NOT NULL UNIQUE,
+    ModCourseECTS INTEGER      NOT NULL,
+    ModuleID      INTEGER      NOT NULL,
+    FOREIGN KEY (ModuleID) REFERENCES SubjectModule (ModuleID)
 );
 
+-- Inserting Computer Science module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (1, 'Essential Computing', 5, 1),
+       (2, 'Software Development', 10, 1),
+       (3, 'Interactive Digital Systems', 5, 1);
 
-CREATE TABLE ModuleProject (
-                               ModProjectID INTEGER PRIMARY KEY,
-                               ModProjectName VARCHAR(255) NOT NULL UNIQUE,
-                               ModProjectECTS INTEGER NOT NULL,
-                               ModProjectDesc TEXT UNIQUE,
-                               ModuleID INTEGER NOT NULL,
-                               FOREIGN KEY (ModuleID) REFERENCES SubjectModule(ModuleID)
+-- Inserting Physics module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (4, 'Thermodynamics and Statistical Mechanics', 5, 2),
+       (5, 'Electrodynamics', 5, 2),
+       (6, 'Quantum Mechanics', 10, 2);
+
+-- Inserting Informatik module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (7, 'Organisatorisk forandring og IT', 5, 3),
+       (8, 'BANDIT', 10, 3),
+       (9, 'Webbased IT-System', 5, 3);
+
+-- Inserting Chemistry module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (10, 'General Chemistry', 5, 4),
+       (11, 'Atoms and Molecules', 5, 4),
+       (12, 'Analytical Chemistry', 5, 4),
+       (13, 'Inorganic Chemistry', 5, 4);
+
+-- Inserting Mathematics module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (14, 'Dynamical Systems and Models', 5, 5),
+       (15, 'Algebra', 5, 5),
+       (16, 'Mathematical Analysis I', 5, 5),
+       (17, 'Mathematical Analysis II', 5, 5);
+
+-- Inserting Molecular Biology module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (18, 'General Molecular Biology', 5, 6),
+       (19, 'Biochemistry', 5, 6),
+       (20, 'Genetics', 5, 6),
+       (21, 'Methods in Molecular Biology', 5, 6);
+
+-- Inserting Astronomy module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (22, 'Essential Astronomy', 5, 7),
+       (23, 'Cosmology', 5, 7),
+       (24, 'Astrobiology', 5, 7),
+       (25, 'Planetary science', 5, 7);
+
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `ModuleProject`
+--
+
+CREATE TABLE ModuleProject
+(
+    ModProjectID   INTEGER PRIMARY KEY,
+    ModProjectName VARCHAR(255) NOT NULL UNIQUE,
+    ModProjectECTS INTEGER      NOT NULL,
+    ModuleID       INTEGER      NOT NULL,
+    FOREIGN KEY (ModuleID) REFERENCES SubjectModule (ModuleID)
 );
 
+-- Inserting subject module projects
+INSERT INTO ModuleProject (ModProjectID, ModProjectName, ModProjectECTS, ModuleID)
+VALUES (1, 'Subject module project in Computer Science', 15, 1),
+       (2, 'Subject module project in Physics', 15, 2),
+       (3, 'Subject module project in Informatik', 15, 3),
+       (4, 'Subject module project in Chemistry', 15, 4),
+       (5, 'Subject module project in Mathematics', 15, 5),
+       (6, 'Subject module project in Molecular Biology', 15, 6),
+       (7, 'Subject module project in Astronomy', 15, 7);
 
-CREATE TABLE ElectiveCourse (
-                                ElCourseID INTEGER PRIMARY KEY,
-                                ElCourseName VARCHAR(255) NOT NULL UNIQUE,
-                                Type VARCHAR(255) NOT NULL,
-                                ElCourseECTS INTEGER NOT NULL,
-                                ElCourseDesc TEXT UNIQUE,
-                                ProgID INTEGER NOT NULL,
-                                FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `ElectiveCourse`
+--
+
+CREATE TABLE ElectiveCourse
+(
+    ElCourseID   INTEGER PRIMARY KEY,
+    ElCourseName VARCHAR(255) NOT NULL UNIQUE,
+    Type         VARCHAR(255) NOT NULL,
+    ElCourseECTS INTEGER      NOT NULL,
+    ProgID       INTEGER      NOT NULL,
+    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
 
+-- ----------------------------------------------------------------------------------------------------------------
 
-CREATE TABLE BachelorProject (
-                                 BachProjectID INTEGER PRIMARY KEY,
-                                 BachProjName VARCHAR(255) NOT NULL UNIQUE,
-                                 BachProjECTS INTEGER NOT NULL,
-                                 BachProjDesc TEXT UNIQUE,
-                                 ProgID INTEGER NOT NULL,
-                                 FOREIGN KEY (ProgID) REFERENCES BachelorProgramme(ProgID)
+--
+-- Structure table `BachelorProject`
+--
+
+CREATE TABLE BachelorProject
+(
+    BachProjectID INTEGER PRIMARY KEY,
+    BachProjName  VARCHAR(255) NOT NULL UNIQUE,
+    BachProjECTS  INTEGER      NOT NULL,
+    ProgID        INTEGER      NOT NULL,
+    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
