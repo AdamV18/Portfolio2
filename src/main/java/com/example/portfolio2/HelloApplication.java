@@ -19,8 +19,9 @@ public class HelloApplication extends Application {
     public ComboBox<String> comboProgram = createCombobox();
     public ComboBox<String> comboSub1 = createCombobox();
     public ComboBox<String> comboSub2 = createCombobox();
-    public ComboBox<String> comboElective = createCombobox();
     public ComboBox<String> comboBasicCourse = createCombobox();
+    public ComboBox<String> comboElective = createCombobox();
+
 
     public Button buttonProgram = createButton("Select");
     public Button buttonSub1 = createButton("Select");
