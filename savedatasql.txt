@@ -15,7 +15,9 @@ CREATE TABLE BachelorProgramme
 
 INSERT INTO BachelorProgramme (ProgID, ProgName, ProgECTS)
 VALUES (1, 'NatBach', 180),
-       (2, 'HumTek', 180);
+       (2, 'HumTek', 180),
+       (3, 'SocialScience', 180),
+       (4, 'GlobalHumanities', 180);
 
 -- ----------------------------------------------------------------------------------------------------------------
 
@@ -70,7 +72,6 @@ VALUES (1, 'BK1 Empirical Data', 5, 1),
        (18, 'Scientific Computing', 5, 1),
        (19, 'Energy and Climate Changes', 5, 1);
 
-
 -- Inserting HumTek basic courses
 INSERT INTO BasicCourse (BasCourseID, BasCourseName, BasCourseECTS, ProgID)
 VALUES (20, 'Design og Konstruktion I+Workshop', 5, 2),
@@ -86,6 +87,40 @@ VALUES (20, 'Design og Konstruktion I+Workshop', 5, 2),
        (30, 'Den (in)humane storby', 5, 2),
        (31, 'Interactive Design in the Field', 5, 2),
        (32, 'Organisation og ledelse af designprocesser', 5, 2);
+
+-- Inserting SocialScience basic courses
+INSERT INTO BasicCourse (BasCourseID, BasCourseName, BasCourseECTS, ProgID)
+VALUES (33, 'Basic Course in Political Science', 5, 3),
+       (34, 'Basic Course in Sociology', 5, 3),
+       (35, 'Methods in Social Sciences', 5, 3),
+       (36, 'Philosophy of Social Science', 5, 3),
+       (37, 'Introduction to Economics', 5, 3),
+       (38, 'Globalization and Society', 5, 3),
+       (39, 'Public Policy and Administration', 5, 3),
+       (40, 'Research Methods in Social Sciences', 5, 3),
+       (41, 'Introduction to Comparative Politics', 5, 3),
+       (42, 'Social Inequalities and Justice', 5, 3),
+       (43, 'Political Theory and Ideologies', 5, 3),
+       (44, 'International Relations Theory', 5, 3),
+       (45, 'Social Change and Movements', 5, 3);
+
+-- Inserting GlobalHumanities basic courses
+INSERT INTO BasicCourse (BasCourseID, BasCourseName, BasCourseECTS, ProgID)
+VALUES (46, 'Dimension course in Science and Philosophy', 5, 4),
+       (47, 'Dimension course in Text and Sign', 5, 4),
+       (48, 'Progression course in Study Competence and Project Management', 5, 4),
+       (49, 'Progression course in Knowledges for the Humanities', 5, 4),
+       (50, 'Progression course in Knowledge Communication', 5, 4),
+       (51, 'Cultural History', 5, 4),
+       (52, 'Global Ethics and Human Rights', 5, 4),
+       (53, 'Intercultural Communication', 5, 4),
+       (54, 'Philosophical Thinking and Society', 5, 4),
+       (55, 'Introduction to Global Humanities', 5, 4),
+       (56, 'History of Ideas', 5, 4),
+       (57, 'Global Cultural Studies', 5, 4),
+       (58, 'Ethnography and Anthropology', 5, 4);
+
+
 
 
 -- ----------------------------------------------------------------------------------------------------------------
@@ -115,6 +150,19 @@ VALUES (5, 'BP1 HumTek', 15, 2),
        (6, 'BP2 HumTek', 15, 2),
        (7, 'BP3 HumTek', 15, 2);
 
+-- Inserting SocialScience basic projects
+INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+VALUES (8, 'BP1 SocialScience', 15, 3),
+       (9, 'BP2 SocialScience', 15, 3),
+       (10, 'BP3 SocialScience', 15, 3);
+
+-- Inserting GlobalHumanities basic projects
+INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+VALUES (11, 'BP1 GlobalHumanities', 15, 4),
+       (12, 'BP2 GlobalHumanities', 15, 4),
+       (13, 'BP3 GlobalHumanities', 15, 4);
+
+
 -- ----------------------------------------------------------------------------------------------------------------
 
 --
@@ -133,12 +181,17 @@ CREATE TABLE SubjectModule
 -- Inserting subject modules
 INSERT INTO SubjectModule (ModuleID, ModuleName, ModuleECTS, ProgID)
 VALUES (1, 'Computer Science', 35, 1),
-       (2, 'Physics', 35, 1),
-       (3, 'Informatik', 35, 2),
-       (4, 'Chemistry', 35, 1),
-       (5, 'Mathematics', 35, 1),
-       (6, 'Molecular Biology', 35, 1),
-       (7, 'Astronomy', 35, 1);
+       (2, 'Philosophy', 35, 4),
+       (3, 'Physics', 35, 1),
+       (4, 'Geography', 35, 2),
+       (5, 'History', 35, 4),
+       (6, 'Informatik', 35, 1),
+       (7, 'International Studies', 35, 3),
+       (8, 'Chemistry', 35, 1),
+       (9, 'Mathematics', 35, 1),
+       (10, 'Molecular Biology', 35, 1),
+       (11, 'Business Studies', 35, 3),
+       (12, 'Astronomy', 35, 1);
 
 -- ----------------------------------------------------------------------------------------------------------------
 
@@ -161,45 +214,81 @@ VALUES (1, 'Essential Computing', 5, 1),
        (2, 'Software Development', 10, 1),
        (3, 'Interactive Digital Systems', 5, 1);
 
+-- Inserting Philosophy module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (4, 'Filosofi- og Videnskabshistorie indtil 1600', 5, 2),
+       (5, 'Filosofihistorie 1600-1900', 5, 2),
+       (6, 'Etik og Politisk Filosofi', 5, 2),
+       (7, 'Metafysik og Erkendelsesteori', 5, 2);
+
 -- Inserting Physics module courses
 INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
-VALUES (4, 'Thermodynamics and Statistical Mechanics', 5, 2),
-       (5, 'Electrodynamics', 5, 2),
-       (6, 'Quantum Mechanics', 10, 2);
+VALUES (8, 'Thermodynamics and Statistical Mechanics', 5, 3),
+       (9, 'Electrodynamics', 5, 3),
+       (10, 'Quantum Mechanics', 10, 3);
+
+-- Inserting Geography module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (11, 'Samfundsgeografi', 5, 4),
+       (12, 'Naturgeografi', 5, 4),
+       (13, 'Kulturgeografi', 5, 4),
+       (14, 'Geografi i praksis', 5, 4);
+
+-- Inserting History module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (15, 'Historie, tid og forandring', 5, 5),
+       (16, 'Moderne historie fra 1750 til i dag', 5, 5),
+       (17, 'Historisk analyse, arkiv og metode', 10, 5);
 
 -- Inserting Informatik module courses
 INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
-VALUES (7, 'Organisatorisk forandring og IT', 5, 3),
-       (8, 'BANDIT', 10, 3),
-       (9, 'Webbased IT-System', 5, 3);
+VALUES (18, 'Organisatorisk forandring og IT', 5, 6),
+       (19, 'BANDIT', 10, 6),
+       (20, 'Webbased IT-System', 5, 6);
+
+-- Inserting International Studies module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (21, 'International Politics', 5, 7),
+       (22, 'International Political Economy', 5, 7),
+       (23, 'Global Sociology', 5, 7),
+       (24, 'War, Peace and Insecurity', 5, 7);
 
 -- Inserting Chemistry module courses
 INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
-VALUES (10, 'General Chemistry', 5, 4),
-       (11, 'Atoms and Molecules', 5, 4),
-       (12, 'Analytical Chemistry', 5, 4),
-       (13, 'Inorganic Chemistry', 5, 4);
+VALUES (25, 'General Chemistry', 5, 8),
+       (26, 'Atoms and Molecules', 5, 8),
+       (27, 'Analytical Chemistry', 5, 8),
+       (28, 'Inorganic Chemistry', 5, 8);
 
 -- Inserting Mathematics module courses
 INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
-VALUES (14, 'Dynamical Systems and Models', 5, 5),
-       (15, 'Algebra', 5, 5),
-       (16, 'Mathematical Analysis I', 5, 5),
-       (17, 'Mathematical Analysis II', 5, 5);
+VALUES (29, 'Dynamical Systems and Models', 5, 9),
+       (30, 'Algebra', 5, 9),
+       (31, 'Mathematical Analysis I', 5, 9),
+       (32, 'Mathematical Analysis II', 5, 9);
 
 -- Inserting Molecular Biology module courses
 INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
-VALUES (18, 'General Molecular Biology', 5, 6),
-       (19, 'Biochemistry', 5, 6),
-       (20, 'Genetics', 5, 6),
-       (21, 'Methods in Molecular Biology', 5, 6);
+VALUES (33, 'General Molecular Biology', 5, 10),
+       (34, 'Biochemistry', 5, 10),
+       (35, 'Genetics', 5, 10),
+       (36, 'Methods in Molecular Biology', 5, 10);
+
+-- Inserting Business Studies module courses
+INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
+VALUES (37, 'Accounting', 5, 11),
+       (38, 'Organization Theory', 5, 11),
+       (39, 'Marketing Management', 5, 11),
+       (40, 'Social Science Analysis Strategy', 5, 11);
 
 -- Inserting Astronomy module courses
 INSERT INTO ModuleCourse (ModCourseID, ModCourseName, ModCourseECTS, ModuleID)
-VALUES (22, 'Essential Astronomy', 5, 7),
-       (23, 'Cosmology', 5, 7),
-       (24, 'Astrobiology', 5, 7),
-       (25, 'Planetary science', 5, 7);
+VALUES (41, 'Essential Astronomy', 5, 12),
+       (42, 'Cosmology', 5, 12),
+       (43, 'Astrobiology', 5, 12),
+       (44, 'Planetary Science', 5, 12);
+
+
 
 -- ----------------------------------------------------------------------------------------------------------------
 
@@ -219,12 +308,17 @@ CREATE TABLE ModuleProject
 -- Inserting subject module projects
 INSERT INTO ModuleProject (ModProjectID, ModProjectName, ModProjectECTS, ModuleID)
 VALUES (1, 'Subject module project in Computer Science', 15, 1),
-       (2, 'Subject module project in Physics', 15, 2),
-       (3, 'Subject module project in Informatik', 15, 3),
-       (4, 'Subject module project in Chemistry', 15, 4),
-       (5, 'Subject module project in Mathematics', 15, 5),
-       (6, 'Subject module project in Molecular Biology', 15, 6),
-       (7, 'Subject module project in Astronomy', 15, 7);
+       (2, 'Subject module project in Philosophy', 15, 2),
+       (3, 'Subject module project in Physics', 15, 3),
+       (4, 'Subject module project in Geography', 15, 4),
+       (5, 'Subject module project in History', 15, 5),
+       (6, 'Subject module project in Informatik', 15, 6),
+       (7, 'Subject module project in International Studies', 15, 7),
+       (8, 'Subject module project in Chemistry', 15, 8),
+       (9, 'Subject module project in Mathematics', 15, 9),
+       (10, 'Subject module project in Molecular Biology', 15, 10),
+       (11, 'Subject module project in Business Studies', 15, 11),
+       (12, 'Subject module project in Astronomy', 15, 12);
 
 -- ----------------------------------------------------------------------------------------------------------------
 
@@ -238,9 +332,25 @@ CREATE TABLE ElectiveCourse
     ElCourseName VARCHAR(255) NOT NULL UNIQUE,
     Type         VARCHAR(255) NOT NULL,
     ElCourseECTS INTEGER      NOT NULL,
-    ProgID       INTEGER      NOT NULL,
+    ProgID       INTEGER      ,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
+
+-- Inserting optional courses for NatBach
+INSERT INTO ElectiveCourse(ElCourseID, ElCourseName, Type, ElCourseECTS, ProgID)
+VALUES
+    (1, 'Entrepreneurship, Foresight and Sustainable Transition', 'Optional', 5, NULL),
+    (2, 'Sprogprofil // Tysk', 'Optional', 5, NULL),
+    (3, 'Sprogprofil // Fransk', 'Optional', 5, NULL),
+    (4, 'Academic English Writing', 'Optional', 5, NULL),
+    (5, 'Journalistisk formidling', 'Optional', 5, NULL),
+    (6, 'Understanding the Continuous World', 'Optional', 5, NULL),
+    (7, 'Entreprenørskab som værdiskabende kvalifikation og proces', 'Optional', 5, NULL),
+    (8, 'Organisation, køn og mangfoldighed', 'Optional', 5, NULL),
+    (9, 'Grundkursus i Sociologi', 'Optional', 5, NULL),
+    (10, 'Grundkursus i Politologi', 'Optional', 5, NULL),
+    (11, 'Political economy of social-ecological transformation', 'Optional', 5, NULL);
+
 
 -- ----------------------------------------------------------------------------------------------------------------
 
@@ -256,3 +366,9 @@ CREATE TABLE BachelorProject
     ProgID        INTEGER      NOT NULL,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
+
+INSERT INTO BachelorProject(BachProjectID, BachProjName, BachProjECTS, ProgID)
+VALUES (1,'NatBach Bachelor Project', 15, 1),
+       (2,'HumTek Bachelor Project', 15, 2),
+       (3,'Social Science Bachelor Project', 15, 3),
+       (4,'Global Humanities Bachelor Project', 15, 4);
