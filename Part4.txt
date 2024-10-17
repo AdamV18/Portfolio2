@@ -19,7 +19,7 @@ FROM Student s
 
 -- V2 With the selection of the student
 
-SELECT s.StudEmail, SUM(
+SELECT s.StudID, SUM(
         bc.BasCourseECTS +
         bp.BasProjECTS +
         bachp.BachProjECTS +
@@ -34,4 +34,4 @@ FROM Student s
          LEFT JOIN ModuleProject mp ON s.ProgID = mp.ModuleID
          LEFT JOIN ModuleCourse mc ON s.ProgID = mc.ModuleID
          LEFT JOIN ElectiveCourse ec ON s.ProgID = ec.ProgID
-         WHERE s.StudEmail = stud-perdrix@ruc.dk
+         WHERE s.StudID = stud-perdrix@ruc.dk
