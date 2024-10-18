@@ -122,7 +122,6 @@ VALUES (46, 'Dimension course in Science and Philosophy', 5, 4),
 
 
 
-
 -- ----------------------------------------------------------------------------------------------------------------
 
 --
@@ -161,6 +160,28 @@ INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
 VALUES (11, 'BP1 GlobalHumanities', 15, 4),
        (12, 'BP2 GlobalHumanities', 15, 4),
        (13, 'BP3 GlobalHumanities', 15, 4);
+
+
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `BachelorProject`
+--
+
+CREATE TABLE BachelorProject
+(
+    BachProjectID INTEGER PRIMARY KEY,
+    BachProjName  VARCHAR(255) NOT NULL UNIQUE,
+    BachProjECTS  INTEGER      NOT NULL,
+    ProgID        INTEGER      NOT NULL,
+    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
+);
+
+INSERT INTO BachelorProject(BachProjectID, BachProjName, BachProjECTS, ProgID)
+VALUES (1, 'NatBach Bachelor Project', 15, 1),
+       (2, 'HumTek Bachelor Project', 15, 2),
+       (3, 'Social Science Bachelor Project', 15, 3),
+       (4, 'Global Humanities Bachelor Project', 15, 4);
 
 
 -- ----------------------------------------------------------------------------------------------------------------
@@ -331,44 +352,68 @@ CREATE TABLE ElectiveCourse
     ElCourseID   INTEGER PRIMARY KEY,
     ElCourseName VARCHAR(255) NOT NULL UNIQUE,
     Type         VARCHAR(255) NOT NULL,
-    ElCourseECTS INTEGER      NOT NULL,
-    ProgID       INTEGER      ,
-    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
+    ElCourseECTS INTEGER      NOT NULL
 );
 
 -- Inserting optional courses for NatBach
-INSERT INTO ElectiveCourse(ElCourseID, ElCourseName, Type, ElCourseECTS, ProgID)
-VALUES
-    (1, 'Entrepreneurship, Foresight and Sustainable Transition', 'Optional', 5, NULL),
-    (2, 'Sprogprofil // Tysk', 'Optional', 5, NULL),
-    (3, 'Sprogprofil // Fransk', 'Optional', 5, NULL),
-    (4, 'Academic English Writing', 'Optional', 5, NULL),
-    (5, 'Journalistisk formidling', 'Optional', 5, NULL),
-    (6, 'Understanding the Continuous World', 'Optional', 5, NULL),
-    (7, 'Entreprenørskab som værdiskabende kvalifikation og proces', 'Optional', 5, NULL),
-    (8, 'Organisation, køn og mangfoldighed', 'Optional', 5, NULL),
-    (9, 'Grundkursus i Sociologi', 'Optional', 5, NULL),
-    (10, 'Grundkursus i Politologi', 'Optional', 5, NULL),
-    (11, 'Political economy of social-ecological transformation', 'Optional', 5, NULL);
+INSERT INTO ElectiveCourse(ElCourseID, ElCourseName, Type, ElCourseECTS)
+VALUES (1, 'Entrepreneurship, Foresight and Sustainable Transition', 'Optional', 5),
+       (2, 'Sprogprofil // Tysk', 'Optional', 5),
+       (3, 'Sprogprofil // Fransk', 'Optional', 5),
+       (4, 'Academic English Writing', 'Optional', 5),
+       (5, 'Journalistisk formidling', 'Optional', 5),
+       (6, 'Understanding the Continuous World', 'Optional', 5),
+       (7, 'Entreprenørskab som værdiskabende kvalifikation og proces', 'Optional', 5),
+       (8, 'Organisation, køn og mangfoldighed', 'Optional', 5),
+       (9, 'Grundkursus i Sociologi', 'Optional', 5),
+       (10, 'Grundkursus i Politologi', 'Optional', 5),
+       (11, 'Political economy of social-ecological transformation', 'Optional', 5);
+
 
 
 -- ----------------------------------------------------------------------------------------------------------------
 
 --
--- Structure table `BachelorProject`
+-- Structure table `BasicCourseParticipation`
 --
 
-CREATE TABLE BachelorProject
+CREATE TABLE BasicCourseParticipation
 (
-    BachProjectID INTEGER PRIMARY KEY,
-    BachProjName  VARCHAR(255) NOT NULL UNIQUE,
-    BachProjECTS  INTEGER      NOT NULL,
-    ProgID        INTEGER      NOT NULL,
-    FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
+    StudID      INTEGER NOT NULL,
+    BasCourseID INTEGER NOT NULL,
+    FOREIGN KEY (StudID) REFERENCES Student (StudID),
+    FOREIGN KEY (BasCourseID) REFERENCES BasicCourse (BasCourseID)
 );
 
-INSERT INTO BachelorProject(BachProjectID, BachProjName, BachProjECTS, ProgID)
-VALUES (1,'NatBach Bachelor Project', 15, 1),
-       (2,'HumTek Bachelor Project', 15, 2),
-       (3,'Social Science Bachelor Project', 15, 3),
-       (4,'Global Humanities Bachelor Project', 15, 4);
+
+
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `SubjectModuleParticipation`
+--
+
+CREATE TABLE SubjectModuleParticipation
+(
+    StudID      INTEGER NOT NULL,
+    ModuleID INTEGER NOT NULL,
+    FOREIGN KEY (StudID) REFERENCES Student (StudID),
+    FOREIGN KEY (ModuleID) REFERENCES SubjectModule (ModuleID)
+);
+
+
+
+
+-- ----------------------------------------------------------------------------------------------------------------
+
+--
+-- Structure table `ElectiveParticipation`
+--
+
+CREATE TABLE ElectiveParticipation
+(
+    StudID      INTEGER NOT NULL,
+    ElCourseID INTEGER NOT NULL,
+    FOREIGN KEY (StudID) REFERENCES Student (StudID),
+    FOREIGN KEY (ElCourseID) REFERENCES ElectiveCourse (ElCourseID)
+);
