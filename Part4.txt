@@ -9,12 +9,15 @@ SELECT SUM(
         ec.ElCourseECTS
 ) AS total_ects
 FROM Student s
+         LEFT JOIN BasicCourseParticipation bcp ON s.StudID = bcp.StudID
+         LEFT JOIN SubjectModuleParticipation smp ON s.StudID = smp.StudID
+         LEFT JOIN ElectiveParticipation ep ON s.StudID = ep.StudID
+         LEFT JOIN BasicCourse bc ON bcp.BasCourseID = bc.BasCourseID
+         LEFT JOIN ModuleProject mp ON smp.ModuleID = mp.ModuleID
+         LEFT JOIN ModuleCourse mc ON smp.ModuleID = mc.ModuleID
+         LEFT JOIN ElectiveCourse ec ON ep.ElCourseID = ec.ElCourseID
          LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID
-         LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID
-         LEFT JOIN BasicCourse bc ON s.ProgID = bc.ProgID
-         LEFT JOIN ModuleProject mp ON s.ProgID = mp.ModuleID
-         LEFT JOIN ModuleCourse mc ON s.ProgID = mc.ModuleID
-         LEFT JOIN ElectiveCourse ec ON s.ProgID = ec.ProgID
+         LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID;
 
 
 -- V2 With the selection of the student
@@ -26,12 +29,15 @@ SELECT s.StudID, SUM(
         mc.ModCourseECTS +
         mp.ModProjectECTS +
         ec.ElCourseECTS
-                  ) AS total_ects
+) AS total_ects
 FROM Student s
+         LEFT JOIN BasicCourseParticipation bcp ON s.StudID = bcp.StudID
+         LEFT JOIN SubjectModuleParticipation smp ON s.StudID = smp.StudID
+         LEFT JOIN ElectiveParticipation ep ON s.StudID = ep.StudID
+         LEFT JOIN BasicCourse bc ON bcp.BasCourseID = bc.BasCourseID
+         LEFT JOIN ModuleProject mp ON smp.ModuleID = mp.ModuleID
+         LEFT JOIN ModuleCourse mc ON smp.ModuleID = mc.ModuleID
+         LEFT JOIN ElectiveCourse ec ON ep.ElCourseID = ec.ElCourseID
          LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID
          LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID
-         LEFT JOIN BasicCourse bc ON s.ProgID = bc.ProgID
-         LEFT JOIN ModuleProject mp ON s.ProgID = mp.ModuleID
-         LEFT JOIN ModuleCourse mc ON s.ProgID = mc.ModuleID
-         LEFT JOIN ElectiveCourse ec ON s.ProgID = ec.ProgID
-         WHERE s.StudID = stud-perdrix@ruc.dk
+         WHERE s.StudID = 'stud-perdrix@ruc.dk';
