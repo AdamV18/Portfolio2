@@ -16,6 +16,7 @@ public class Controller {
         view.comboProgram.getItems().addAll(model.baseProgram());
         view.comboSub1.getItems().addAll(model.subjectModule());
         view.comboSub2.getItems().addAll(model.subjectModule());
+        view.comboElective.getItems().addAll(model.electiveCourse());
 
         view.comboProgram.setOnAction(event -> {
             String selectedBase = view.comboProgram.getValue();
@@ -41,6 +42,19 @@ public class Controller {
             updateTextAreaSub2(selectedSubject);
         });
 
+        // Handle selection of elective courses
+        view.comboElective.setOnAction(event -> {
+            String selectedElective = view.comboElective.getValue();
+            updateTextAreaElective(selectedElective);
+        });
+
+        view.addElective.setOnAction(event -> {
+            String selectedElectiveCourse = view.comboElective.getValue();
+            if (selectedElectiveCourse != null) {
+                addSelectedCourseToTextAreaElective(selectedElectiveCourse); // Add the selected elective course to the text area
+                view.comboElective.getItems().remove(selectedElectiveCourse); // Remove from combobox after selection
+            }
+        });
     }
 
     private void updateComboBasicCourse(String base) {
@@ -61,8 +75,10 @@ public class Controller {
         view.comboBasicCourse.getItems().clear();
         view.textAreaSub1.clear();
         view.textAreaSub2.clear();
+        view.textAreaElective.clear();
         view.comboSub1.getSelectionModel().clearSelection();
         view.comboSub2.getSelectionModel().clearSelection();
+        view.comboElective.getSelectionModel().clearSelection();
     }
 
     private void updateTextAreaSub1(String subject) {
@@ -85,6 +101,16 @@ public class Controller {
         }
     }
 
+    // Add the update for elective courses
+    private void updateTextAreaElective(String elective) {
+        view.textAreaElective.clear();
+        if (elective != null) {
+            view.textAreaElective.appendText(elective + "\n");
+        }
+    }
 
-
+    // Add selected elective course to text area
+    private void addSelectedCourseToTextAreaElective(String course) {
+        view.textAreaElective.appendText(course + "\n");
+    }
 }
