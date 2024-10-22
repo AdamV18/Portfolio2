@@ -16,7 +16,7 @@ public class Controller {
         view.comboProgram.getItems().addAll(model.baseProgram());
         view.comboSub1.getItems().addAll(model.subjectModule());
         view.comboSub2.getItems().addAll(model.subjectModule());
-        view.comboElective.getItems().addAll(model.electiveCourse());
+        view.comboElectiveCourse.getItems().addAll(model.electiveCourse());
 
         view.comboProgram.setOnAction(event -> {
             String selectedBase = view.comboProgram.getValue();
@@ -24,7 +24,7 @@ public class Controller {
             updateComboBasicCourse(selectedBase);
         });
 
-        view.addProgram.setOnAction(event -> {
+        view.addBasicCourse.setOnAction(event -> {
             String selectedCourse = view.comboBasicCourse.getValue();
             if (selectedCourse != null) {
                 addSelectedCourseToTextAreaProgram(selectedCourse); // Methode um Kurs in das TextArea zu schreiben
@@ -43,16 +43,16 @@ public class Controller {
         });
 
         // Handle selection of elective courses
-        view.comboElective.setOnAction(event -> {
-            String selectedElective = view.comboElective.getValue();
+        view.comboElectiveCourse.setOnAction(event -> {
+            String selectedElective = view.comboElectiveCourse.getValue();
             updateTextAreaElective(selectedElective);
         });
 
-        view.addElective.setOnAction(event -> {
-            String selectedElectiveCourse = view.comboElective.getValue();
+        view.addElectiveCourse.setOnAction(event -> {
+            String selectedElectiveCourse = view.comboElectiveCourse.getValue();
             if (selectedElectiveCourse != null) {
                 addSelectedCourseToTextAreaElective(selectedElectiveCourse); // Add the selected elective course to the text area
-                view.comboElective.getItems().remove(selectedElectiveCourse); // Remove from combobox after selection
+                view.comboElectiveCourse.getItems().remove(selectedElectiveCourse); // Remove from combobox after selection
             }
         });
     }
@@ -66,19 +66,37 @@ public class Controller {
     }
 
     private void addSelectedCourseToTextAreaProgram(String course) {
-        view.textAreaProgram.appendText(course + "\n"); // Fügt den ausgewählten Kurs in das TextArea ein
+        view.textAreaBasicCourse.appendText(course + "\n"); // Fügt den ausgewählten Kurs in das TextArea ein
     }
+
+
+
+
+    // Add the update for elective courses
+    private void updateTextAreaElective(String elective) {
+        view.textAreaElectiveCourse.clear();
+        if (elective != null) {
+            view.textAreaElectiveCourse.appendText(elective + "\n");
+        }
+    }
+
+    // Add selected elective course to text area
+    private void addSelectedCourseToTextAreaElective(String course) {
+        view.textAreaElectiveCourse.appendText(course + "\n");
+    }
+
+
 
     private void resetSelections() {
         // Setze alle Auswahlen zurück
-        view.textAreaProgram.clear();
+        view.textAreaBasicCourse.clear();
         view.comboBasicCourse.getItems().clear();
         view.textAreaSub1.clear();
         view.textAreaSub2.clear();
-        view.textAreaElective.clear();
+        view.textAreaElectiveCourse.clear();
         view.comboSub1.getSelectionModel().clearSelection();
         view.comboSub2.getSelectionModel().clearSelection();
-        view.comboElective.getSelectionModel().clearSelection();
+        view.comboElectiveCourse.getSelectionModel().clearSelection();
     }
 
     private void updateTextAreaSub1(String subject) {
@@ -101,16 +119,7 @@ public class Controller {
         }
     }
 
-    // Add the update for elective courses
-    private void updateTextAreaElective(String elective) {
-        view.textAreaElective.clear();
-        if (elective != null) {
-            view.textAreaElective.appendText(elective + "\n");
-        }
-    }
 
-    // Add selected elective course to text area
-    private void addSelectedCourseToTextAreaElective(String course) {
-        view.textAreaElective.appendText(course + "\n");
-    }
 }
+
+

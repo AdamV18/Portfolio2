@@ -20,21 +20,21 @@ public class HelloApplication extends Application {
     public ComboBox<String> comboSub1 = createCombobox();
     public ComboBox<String> comboSub2 = createCombobox();
     public ComboBox<String> comboBasicCourse = createCombobox();
-    public ComboBox<String> comboElective = createCombobox();
+    public ComboBox<String> comboElectiveCourse = createCombobox();
 
 
     public Button buttonProgram = createButton("Select");
     public Button buttonSub1 = createButton("Select");
     public Button buttonSub2 = createButton("Select");
-    public Button addProgram = createButton("Add Course");
-    public Button addElective = createButton("Add Course");
+    public Button addBasicCourse = createButton("Add Course");
+    public Button addElectiveCourse = createButton("Add Course");
 
-    public TextArea textAreaProgram = createTextArea();
+    public TextArea textAreaBasicCourse = createTextArea();
     public TextArea textAreaSub1 = createTextArea();
     public TextArea textAreaSub2 = createTextArea();
-    public TextArea textAreaElective = createTextArea();
+    public TextArea textAreaElectiveCourse = createTextArea();
 
-    public Label crProgram = createLabel("Credits: ");
+    public Label crBasicCourse = createLabel("Credits: ");
     public Label crSub1 = createLabel("Credits: ");
     public Label crSub2 = createLabel("Credits: ");
     public Label crElective = createLabel("Credits: ");
@@ -46,8 +46,8 @@ public class HelloApplication extends Application {
         Label subject1 = createLabel("Subject Module 1");
         Label subject2 = createLabel("Subject Module 2");
         Label elective = createLabel("Elective");
-        Label course1 = createLabel("Choose Basic Courses");
-        Label course2 = createLabel("Choose Elective Courses");
+        Label basiccourse = createLabel("Choose Basic Courses");
+        Label electivecourse = createLabel("Choose Elective Courses");
 
         //Fill Label, Boxes
         con.fillComboBox();
@@ -69,28 +69,26 @@ public class HelloApplication extends Application {
         root.add(comboProgram, 0, 1);
         root.add(comboSub1, 1, 1);
         root.add(comboSub2, 2, 1);
-        //root.add(comboElective, 3, 1);
 
         root.add(buttonProgram, 0, 2);
         root.add(buttonSub1, 1, 2);
         root.add(buttonSub2, 2, 2);
-        //root.add(addElective, 3, 2);
 
-        root.add(course1, 0, 3);
-        root.add(course2, 3, 3);
+        root.add(basiccourse, 0, 3);
+        root.add(electivecourse, 3, 3);
 
         root.add(comboBasicCourse, 0, 4);
-        root.add(comboElective, 3, 4);
+        root.add(comboElectiveCourse, 3, 4);
 
-        root.add(addProgram, 0, 5);
-        root.add(addElective, 3, 5);
+        root.add(addBasicCourse, 0, 5);
+        root.add(addElectiveCourse, 3, 5);
 
-        root.add(textAreaProgram, 0, 6);
+        root.add(textAreaBasicCourse, 0, 6);
         root.add(textAreaSub1, 1, 6);
         root.add(textAreaSub2, 2, 6);
-        root.add(textAreaElective, 3, 6);
+        root.add(textAreaElectiveCourse, 3, 6);
 
-        root.add(crProgram, 0, 7);
+        root.add(crBasicCourse, 0, 7);
         root.add(crSub1, 1, 7);
         root.add(crSub2, 2, 7);
         root.add(crElective, 3, 7);
