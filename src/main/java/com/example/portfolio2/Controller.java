@@ -2,6 +2,7 @@ package com.example.portfolio2;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.application.Platform;
 
 public class Controller {
@@ -25,6 +26,7 @@ public class Controller {
         view.comboProgram.setOnAction(event -> {
             String selectedBase = view.comboProgram.getValue();
             resetSelections();
+            addProjects(selectedBase);
             updateComboBasicCourse(selectedBase);
         });
 
@@ -57,6 +59,30 @@ public class Controller {
         });
     }
 
+
+
+    private void addProjects(String selectedBase) {
+        view.textAreaBasicCourse.appendText(model.bachelorProject(selectedBase) + "\n");
+        for ( String baseproject : model.baseProject(selectedBase)){
+            view.textAreaBasicCourse.appendText(baseproject + "\n");
+        }
+    }
+
+
+    private void updateComboBasicCourse(String base) {
+        view.comboBasicCourse.getItems().clear();
+        List<String> baseCourses = model.baseCourse(base);
+        if (baseCourses != null) {
+            view.comboBasicCourse.getItems().addAll(baseCourses);
+        }
+    }
+
+
+    private void addSelectedCourseToTextAreaBasicCourse(String course) {
+        view.textAreaBasicCourse.appendText(course + "\n"); // Fügt den ausgewählten Kurs in das TextArea ein
+    }
+
+
     private void updateComboSub2Options() {
         view.comboSub2.getItems().clear();
         for (String subject : model.subjectModule()) {
@@ -80,17 +106,6 @@ public class Controller {
         }
     }
 
-    private void updateComboBasicCourse(String base) {
-        view.comboBasicCourse.getItems().clear();
-        List<String> baseCourses = model.baseCourse(base);
-        if (baseCourses != null) {
-            view.comboBasicCourse.getItems().addAll(baseCourses);
-        }
-    }
-
-    private void addSelectedCourseToTextAreaBasicCourse(String course) {
-        view.textAreaBasicCourse.appendText(course + "\n"); // Fügt den ausgewählten Kurs in das TextArea ein
-    }
 
     private void addSelectedCourseToTextAreaElective(String course) {
         view.textAreaElectiveCourse.appendText(course + "\n");
@@ -113,6 +128,7 @@ public class Controller {
     private void updateTextAreaSub1(String subject) {
         view.textAreaSub1.clear();
         List<String> subjectCourses = model.subjectCourse(subject);
+        view.textAreaSub1.appendText(model.subjectProject(subject) + "\n");
         if (subjectCourses != null) {
             for (String course : subjectCourses) {
                 view.textAreaSub1.appendText(course + "\n");
@@ -123,6 +139,7 @@ public class Controller {
     private void updateTextAreaSub2(String subject) {
         view.textAreaSub2.clear();
         List<String> subjectCourses = model.subjectCourse(subject);
+        view.textAreaSub2.appendText(model.subjectProject(subject) + "\n");
         if (subjectCourses != null) {
             for (String course : subjectCourses) {
                 view.textAreaSub2.appendText(course + "\n");

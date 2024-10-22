@@ -45,24 +45,6 @@ class Model {
         return programs;
     }
 
-    public List<String> subjectModule() {
-        List<String> modules = new ArrayList<>();
-        String query = "SELECT ModuleName FROM SubjectModule";
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    modules.add(rs.getString("ModuleName"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-        return modules;
-    }
 
     public List<String> baseCourse(String base) {
         List<String> courses = new ArrayList<>();
@@ -86,6 +68,7 @@ class Model {
         return courses;
     }
 
+
     public List<String> baseProject(String base) {
         List<String> projects = new ArrayList<>();
         String query = "SELECT BasProjName FROM BasicProject bp JOIN BachelorProgramme prog ON bp.ProgID = prog.ProgID WHERE prog.ProgName = ?";
@@ -107,6 +90,51 @@ class Model {
         }
         return projects;
     }
+
+
+    public List<String> bachelorProject(String base) {
+        List<String> bachproject = new ArrayList<>();
+        String query = "SELECT BachProjName FROM BachelorProject bcp JOIN BachelorProgramme prog ON bcp.ProgID = prog.ProgID WHERE prog.ProgName = ?";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, base);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        bachproject.add(rs.getString("BachProjName"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+        return bachproject;
+    }
+
+
+    public List<String> subjectModule() {
+        List<String> modules = new ArrayList<>();
+        String query = "SELECT ModuleName FROM SubjectModule";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    modules.add(rs.getString("ModuleName"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+        return modules;
+    }
+
+
 
     public List<String> subjectCourse(String subject) {
         List<String> courses = new ArrayList<>();
@@ -198,6 +226,10 @@ class Model {
 
         for (String bs : baseProgram()) {
             if (baseProject(bs).contains(s)) return true;
+        }
+
+        for (String bs : baseProgram()) {
+            if (bachelorProject(bs).contains(s)) return true;
         }
 
         return false;

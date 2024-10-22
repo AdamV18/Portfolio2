@@ -29,6 +29,7 @@ public class HelloApplication extends Application {
     public Button addBasicCourse = createButton("Add Course");
     public Button addElectiveCourse = createButton("Add Course");
 
+
     public TextArea textAreaBasicCourse = createTextArea();
     public TextArea textAreaSub1 = createTextArea();
     public TextArea textAreaSub2 = createTextArea();
