@@ -35,10 +35,11 @@ public class HelloApplication extends Application {
     public TextArea textAreaSub2 = createTextArea();
     public TextArea textAreaElectiveCourse = createTextArea();
 
-    public Label crBasicCourse = createLabel("Credits: ");
-    public Label crSub1 = createLabel("Credits: ");
-    public Label crSub2 = createLabel("Credits: ");
-    public Label crElective = createLabel("Credits: ");
+    public Label crBasic = createLabel("Basic Credits: ");
+    public Label crSub1 = createLabel("SubMod 1 Credits: ");
+    public Label crSub2 = createLabel("SubMod 2 Credits: ");
+    public Label crElective = createLabel("Elective Credits: ");
+    public Label crTotal = createLabel("Total Credits: ");
 
     @Override
     public void start(Stage stage) {
@@ -89,17 +90,17 @@ public class HelloApplication extends Application {
         root.add(textAreaSub2, 2, 6);
         root.add(textAreaElectiveCourse, 3, 6);
 
-        root.add(crBasicCourse, 0, 7);
+        root.add(crBasic, 0, 7);
         root.add(crSub1, 1, 7);
         root.add(crSub2, 2, 7);
         root.add(crElective, 3, 7);
+        root.add(crTotal, 0, 8);
 
         // Set scene size to a more reasonable size
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Choose your fighter !");
         stage.setScene(scene);
         stage.show();
-
 
     }
 
