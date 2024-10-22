@@ -43,11 +43,11 @@ public class HelloApplication extends Application {
     public void start(Stage stage) {
 
         Label program = createLabel("Program");
-        Label subject1 = createLabel("Subject 1");
-        Label subject2 = createLabel("Subject 2");
+        Label subject1 = createLabel("Subject Module 1");
+        Label subject2 = createLabel("Subject Module 2");
         Label elective = createLabel("Elective");
-        Label course1 = createLabel("Choose Course");
-        Label course2 = createLabel("Choose Course");
+        Label course1 = createLabel("Choose Basic Courses");
+        Label course2 = createLabel("Choose Elective Courses");
 
         //Fill Label, Boxes
         con.fillComboBox();
