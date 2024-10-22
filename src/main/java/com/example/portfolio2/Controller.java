@@ -1,4 +1,5 @@
 package com.example.portfolio2;
+
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
@@ -6,6 +7,9 @@ import javafx.application.Platform;
 public class Controller {
     private Model model;
     private HelloApplication view;
+
+    private String selectedSub1 = null;
+    private String selectedSub2 = null;
 
     Controller(Model model, HelloApplication view) {
         this.model = model;
@@ -33,32 +37,48 @@ public class Controller {
         });
 
         view.comboSub1.setOnAction(event -> {
-            String selectedSubject = view.comboSub1.getValue();
-            updateTextAreaSub1(selectedSubject);
+            selectedSub1 = view.comboSub1.getValue();
+            updateTextAreaSub1(selectedSub1);
+            updateComboSub2Options();
         });
 
         view.comboSub2.setOnAction(event -> {
-            String selectedSubject = view.comboSub2.getValue();
-            updateTextAreaSub2(selectedSubject);
+            selectedSub2 = view.comboSub2.getValue();
+            updateTextAreaSub2(selectedSub2);
+            updateComboSub1Options();
         });
-
-        /*
-        // Handle selection of elective courses
-        view.comboElectiveCourse.setOnAction(event -> {
-            String selectedElective = view.comboElectiveCourse.getValue();
-            updateTextAreaElective(selectedElective);
-        });
-         */
 
         view.addElectiveCourse.setOnAction(event -> {
             String selectedElectiveCourse = view.comboElectiveCourse.getValue();
             if (selectedElectiveCourse != null) {
-                addSelectedCourseToTextAreaElective(selectedElectiveCourse); // Add the selected elective course to the text area
-                view.comboElectiveCourse.getItems().remove(selectedElectiveCourse); // Remove from combobox after selection
+                addSelectedCourseToTextAreaElective(selectedElectiveCourse);
+                view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
             }
         });
     }
 
+    private void updateComboSub2Options() {
+        view.comboSub2.getItems().clear();
+        for (String subject : model.subjectModule()) {
+            if (!subject.equals(selectedSub1)) {
+                view.comboSub2.getItems().add(subject);
+            }
+        }
+        if (selectedSub2 != null) {
+            view.comboSub2.getSelectionModel().select(selectedSub2);
+        }
+    }
+
+    private void updateComboSub1Options() {
+        for (String subject : model.subjectModule()) {
+            if (!subject.equals(selectedSub2)) {
+                view.comboSub1.getItems().add(subject);
+            }
+        }
+        if (selectedSub1 != null) {
+            view.comboSub1.getSelectionModel().select(selectedSub1);
+        }
+    }
 
     private void updateComboBasicCourse(String base) {
         view.comboBasicCourse.getItems().clear();
@@ -72,25 +92,11 @@ public class Controller {
         view.textAreaBasicCourse.appendText(course + "\n"); // Fügt den ausgewählten Kurs in das TextArea ein
     }
 
-    /*
-    // Add the update for elective courses
-    private void updateTextAreaElective(String elective) {
-        view.textAreaElectiveCourse.clear();
-        if (elective != null) {
-            view.textAreaElectiveCourse.appendText(elective + "\n");
-        }
-    }
-     */
-
-    // Add selected elective course to text area
     private void addSelectedCourseToTextAreaElective(String course) {
         view.textAreaElectiveCourse.appendText(course + "\n");
     }
 
-
-
     private void resetSelections() {
-        // Setze alle Auswahlen zurück
         view.textAreaBasicCourse.clear();
         view.comboBasicCourse.getItems().clear();
         view.textAreaSub1.clear();
@@ -99,6 +105,9 @@ public class Controller {
         view.comboSub1.getSelectionModel().clearSelection();
         view.comboSub2.getSelectionModel().clearSelection();
         view.comboElectiveCourse.getSelectionModel().clearSelection();
+
+        selectedSub1 = null;
+        selectedSub2 = null;
     }
 
     private void updateTextAreaSub1(String subject) {
@@ -120,8 +129,4 @@ public class Controller {
             }
         }
     }
-
-
 }
-
-
