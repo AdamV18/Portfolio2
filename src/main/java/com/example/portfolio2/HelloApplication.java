@@ -95,7 +95,7 @@ public class HelloApplication extends Application {
 
         // Set scene size to a more reasonable size
         Scene scene = new Scene(root, 800, 600);
-        stage.setTitle("JavaFX Demo");
+        stage.setTitle("Choose your fighter !");
         stage.setScene(scene);
         stage.show();
 
