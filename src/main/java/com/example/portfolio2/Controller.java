@@ -1,8 +1,6 @@
 package com.example.portfolio2;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javafx.application.Platform;
 
 public class Controller {
@@ -18,11 +16,19 @@ public class Controller {
     }
 
     public void fillComboBox() {
+        // Populate comboProgram with strings (BachelorProgramme)
         view.comboProgram.getItems().addAll(model.baseProgram());
+
+        // Populate comboSub1 and comboSub2 with strings (SubjectModule)
         view.comboSub1.getItems().addAll(model.subjectModule());
         view.comboSub2.getItems().addAll(model.subjectModule());
-        view.comboElectiveCourse.getItems().addAll(model.electiveCourse());
 
+        // Populate elective courses with ECTS and Activity names
+        for (Activity elective : model.electiveCourse()) {
+            view.comboElectiveCourse.getItems().add(elective.getActivityECTS() + " - " + elective.getActivityName());
+        }
+
+        // Add event listeners for user actions
         view.comboProgram.setOnAction(event -> {
             String selectedBase = view.comboProgram.getValue();
             resetSelections();
@@ -33,21 +39,23 @@ public class Controller {
         view.addBasicCourse.setOnAction(event -> {
             String selectedCourse = view.comboBasicCourse.getValue();
             if (selectedCourse != null) {
-                addSelectedCourseToTextAreaBasicCourse(selectedCourse); // Methode um Kurs in das TextArea zu schreiben
-                view.comboBasicCourse.getItems().remove(selectedCourse); // Entfernt den ausgewählten Kurs
+                addSelectedCourseToTextAreaBasicCourse(selectedCourse);
+                view.comboBasicCourse.getItems().remove(selectedCourse);
             }
         });
 
         view.comboSub1.setOnAction(event -> {
             selectedSub1 = view.comboSub1.getValue();
             updateTextAreaSub1(selectedSub1);
-            updateComboSub2Options();
+            //updateComboSub2Options(selectedSub1);
+            view.comboSub2.getItems().remove(selectedSub1);
         });
 
         view.comboSub2.setOnAction(event -> {
             selectedSub2 = view.comboSub2.getValue();
             updateTextAreaSub2(selectedSub2);
-            updateComboSub1Options();
+            //updateComboSub1Options(selectedSub2);
+            view.comboSub1.getItems().remove(selectedSub2);
         });
 
         view.addElectiveCourse.setOnAction(event -> {
@@ -59,31 +67,33 @@ public class Controller {
         });
     }
 
-
-
     private void addProjects(String selectedBase) {
-        view.textAreaBasicCourse.appendText(model.bachelorProject(selectedBase) + "\n");
-        for ( String baseproject : model.baseProject(selectedBase)){
-            view.textAreaBasicCourse.appendText(baseproject + "\n");
+        // Append bachelor projects
+        for (Activity project : model.bachelorProject(selectedBase)) {
+            view.textAreaBasicCourse.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
+        }
+
+        // Append base projects
+        for (Activity baseProject : model.baseProject(selectedBase)) {
+            view.textAreaBasicCourse.appendText(baseProject.getActivityECTS() + " - " + baseProject.getActivityName() + "\n");
         }
     }
-
 
     private void updateComboBasicCourse(String base) {
         view.comboBasicCourse.getItems().clear();
-        List<String> baseCourses = model.baseCourse(base);
+        List<Activity> baseCourses = model.baseCourse(base);
         if (baseCourses != null) {
-            view.comboBasicCourse.getItems().addAll(baseCourses);
+            for (Activity course : baseCourses) {
+                view.comboBasicCourse.getItems().add(course.getActivityECTS() + " - " + course.getActivityName());
+            }
         }
     }
 
-
     private void addSelectedCourseToTextAreaBasicCourse(String course) {
-        view.textAreaBasicCourse.appendText(course + "\n"); // Fügt den ausgewählten Kurs in das TextArea ein
+        view.textAreaBasicCourse.appendText(course + "\n");
     }
 
-
-    private void updateComboSub2Options() {
+    private void updateComboSub2Options(String subjecttook) {
         view.comboSub2.getItems().clear();
         for (String subject : model.subjectModule()) {
             if (!subject.equals(selectedSub1)) {
@@ -95,7 +105,8 @@ public class Controller {
         }
     }
 
-    private void updateComboSub1Options() {
+    private void updateComboSub1Options(String subjecttook) {
+        view.comboSub1.getItems().clear();
         for (String subject : model.subjectModule()) {
             if (!subject.equals(selectedSub2)) {
                 view.comboSub1.getItems().add(subject);
@@ -105,7 +116,6 @@ public class Controller {
             view.comboSub1.getSelectionModel().select(selectedSub1);
         }
     }
-
 
     private void addSelectedCourseToTextAreaElective(String course) {
         view.textAreaElectiveCourse.appendText(course + "\n");
@@ -127,22 +137,22 @@ public class Controller {
 
     private void updateTextAreaSub1(String subject) {
         view.textAreaSub1.clear();
-        List<String> subjectCourses = model.subjectCourse(subject);
-        view.textAreaSub1.appendText(model.subjectProject(subject) + "\n");
+        view.textAreaSub1.appendText(model.subjectProject(subject).getActivityECTS() + " - " + model.subjectProject(subject).getActivityName() + "\n");
+        List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
-            for (String course : subjectCourses) {
-                view.textAreaSub1.appendText(course + "\n");
+            for (Activity course : subjectCourses) {
+                view.textAreaSub1.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
             }
         }
     }
 
     private void updateTextAreaSub2(String subject) {
         view.textAreaSub2.clear();
-        List<String> subjectCourses = model.subjectCourse(subject);
-        view.textAreaSub2.appendText(model.subjectProject(subject) + "\n");
+        view.textAreaSub2.appendText(model.subjectProject(subject).getActivityECTS() + " - " + model.subjectProject(subject).getActivityName() + "\n");
+        List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
-            for (String course : subjectCourses) {
-                view.textAreaSub2.appendText(course + "\n");
+            for (Activity course : subjectCourses) {
+                view.textAreaSub2.appendText( course.getActivityECTS() + " - " + course.getActivityName() + "\n");
             }
         }
     }

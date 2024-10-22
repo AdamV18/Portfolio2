@@ -45,10 +45,9 @@ class Model {
         return programs;
     }
 
-
-    public List<String> baseCourse(String base) {
-        List<String> courses = new ArrayList<>();
-        String query = "SELECT BasCourseName FROM BasicCourse bc JOIN BachelorProgramme bp ON bc.ProgID = bp.ProgID WHERE bp.ProgName = ?";
+    public List<Activity> baseCourse(String base) {
+        List<Activity> courses = new ArrayList<>();
+        String query = "SELECT BasCourseName, BasCourseECTS, BasCourseID FROM BasicCourse bc JOIN BachelorProgramme bp ON bc.ProgID = bp.ProgID WHERE bp.ProgName = ?";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -56,7 +55,10 @@ class Model {
                 stmt.setString(1, base);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        courses.add(rs.getString("BasCourseName"));
+                        String courseName = rs.getString("BasCourseName");
+                        int courseECTS = rs.getInt("BasCourseECTS");
+                        int courseID = rs.getInt("BasCourseID");
+                        courses.add(new Activity(courseName, courseECTS, courseID, false));
                     }
                 }
             }
@@ -68,10 +70,9 @@ class Model {
         return courses;
     }
 
-
-    public List<String> baseProject(String base) {
-        List<String> projects = new ArrayList<>();
-        String query = "SELECT BasProjName FROM BasicProject bp JOIN BachelorProgramme prog ON bp.ProgID = prog.ProgID WHERE prog.ProgName = ?";
+    public List<Activity> baseProject(String base) {
+        List<Activity> projects = new ArrayList<>();
+        String query = "SELECT BasProjName, BasProjECTS, BasProjID FROM BasicProject bp JOIN BachelorProgramme prog ON bp.ProgID = prog.ProgID WHERE prog.ProgName = ?";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -79,7 +80,10 @@ class Model {
                 stmt.setString(1, base);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        projects.add(rs.getString("BasProjName"));
+                        String projName = rs.getString("BasProjName");
+                        int projECTS = rs.getInt("BasProjECTS");
+                        int projID = rs.getInt("BasProjID");
+                        projects.add(new Activity(projName, projECTS, projID, true));
                     }
                 }
             }
@@ -91,10 +95,9 @@ class Model {
         return projects;
     }
 
-
-    public List<String> bachelorProject(String base) {
-        List<String> bachproject = new ArrayList<>();
-        String query = "SELECT BachProjName FROM BachelorProject bcp JOIN BachelorProgramme prog ON bcp.ProgID = prog.ProgID WHERE prog.ProgName = ?";
+    public List<Activity> bachelorProject(String base) {
+        List<Activity> bachProjects = new ArrayList<>();
+        String query = "SELECT BachProjName, BachProjECTS, BachProjID FROM BachelorProject bcp JOIN BachelorProgramme prog ON bcp.ProgID = prog.ProgID WHERE prog.ProgName = ?";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -102,7 +105,10 @@ class Model {
                 stmt.setString(1, base);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        bachproject.add(rs.getString("BachProjName"));
+                        String projName = rs.getString("BachProjName");
+                        int projECTS = rs.getInt("BachProjECTS");
+                        int projID = rs.getInt("BachProjID");
+                        bachProjects.add(new Activity(projName, projECTS, projID, true));
                     }
                 }
             }
@@ -111,9 +117,8 @@ class Model {
         } finally {
             closeConnection(conn);
         }
-        return bachproject;
+        return bachProjects;
     }
-
 
     public List<String> subjectModule() {
         List<String> modules = new ArrayList<>();
@@ -134,11 +139,9 @@ class Model {
         return modules;
     }
 
-
-
-    public List<String> subjectCourse(String subject) {
-        List<String> courses = new ArrayList<>();
-        String query = "SELECT ModCourseName FROM ModuleCourse mc JOIN SubjectModule sm ON mc.ModuleID = sm.ModuleID WHERE sm.ModuleName = ?";
+    public List<Activity> subjectCourse(String subject) {
+        List<Activity> courses = new ArrayList<>();
+        String query = "SELECT ModCourseName, ModCourseECTS, ModCourseID FROM ModuleCourse mc JOIN SubjectModule sm ON mc.ModuleID = sm.ModuleID WHERE sm.ModuleName = ?";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -146,7 +149,10 @@ class Model {
                 stmt.setString(1, subject);
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        courses.add(rs.getString("ModCourseName"));
+                        String courseName = rs.getString("ModCourseName");
+                        int courseECTS = rs.getInt("ModCourseECTS");
+                        int courseID = rs.getInt("ModCourseID");
+                        courses.add(new Activity(courseName, courseECTS, courseID, false));
                     }
                 }
             }
@@ -158,8 +164,8 @@ class Model {
         return courses;
     }
 
-    public String subjectProject(String subject) {
-        String query = "SELECT ModProjName FROM ModuleProject mp JOIN SubjectModule sm ON mp.ModuleID = sm.ModuleID WHERE sm.ModuleName = ?";
+    public Activity subjectProject(String subject) {
+        String query = "SELECT ModProjName, ModProjECTS, ModProjID FROM ModuleProject mp JOIN SubjectModule sm ON mp.ModuleID = sm.ModuleID WHERE sm.ModuleName = ?";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -167,7 +173,10 @@ class Model {
                 stmt.setString(1, subject);
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        return rs.getString("ModProjName");
+                        String projName = rs.getString("ModProjName");
+                        int projECTS = rs.getInt("ModProjECTS");
+                        int projID = rs.getInt("ModProjID");
+                        return new Activity(projName, projECTS, projID, true);
                     }
                 }
             }
@@ -176,18 +185,21 @@ class Model {
         } finally {
             closeConnection(conn);
         }
-        return "Subject module project in " + subject;
+        return new Activity("Subject module project in " + subject, 0, -1, true);
     }
 
-    public List<String> electiveCourse() {
-        List<String> electives = new ArrayList<>();
-        String query = "SELECT ElCourseName FROM ElectiveCourse";
+    public List<Activity> electiveCourse() {
+        List<Activity> electives = new ArrayList<>();
+        String query = "SELECT ElCourseName, ElCourseECTS, ElCourseID FROM ElectiveCourse";
         Connection conn = null;
         try {
             conn = getConnection();
             try (PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    electives.add(rs.getString("ElCourseName"));
+                    String courseName = rs.getString("ElCourseName");
+                    int courseECTS = rs.getInt("ElCourseECTS");
+                    int courseID = rs.getInt("ElCourseID");
+                    electives.add(new Activity(courseName, courseECTS, courseID, false));
                 }
             }
         } catch (SQLException e) {
@@ -216,22 +228,41 @@ class Model {
         } finally {
             closeConnection(conn);
         }
-        return 5;
+        return 5; // Default ECTS value
+    }
+}
+
+class Activity {
+    private String activityName;
+    private int activityECTS;
+    private int activityID;
+    private boolean activityProject;
+
+    public Activity(String Name, int ECTS, int ID, boolean Project) {
+        this.activityName = Name;
+        this.activityECTS = ECTS;
+        this.activityID = ID;
+        this.activityProject = Project;
     }
 
-    boolean isProject(String s) {
-        for (String fm : subjectModule()) {
-            if (s.equals(subjectProject(fm))) return true;
-        }
+    public String getActivityName() {
+        return activityName;
+    }
 
-        for (String bs : baseProgram()) {
-            if (baseProject(bs).contains(s)) return true;
-        }
+    public int getActivityECTS() {
+        return activityECTS;
+    }
 
-        for (String bs : baseProgram()) {
-            if (bachelorProject(bs).contains(s)) return true;
-        }
+    public int getActivityID() {
+        return activityID;
+    }
 
-        return false;
+    public boolean isActivityProject() {
+        return activityProject;
+    }
+
+    @Override
+    public String toString() {
+        return "Activity Name: " + activityName + ", ECTS: " + activityECTS + ", ID: " + activityID + ", Project: " + activityProject;
     }
 }

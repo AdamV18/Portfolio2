@@ -130,7 +130,7 @@ VALUES (46, 'Dimension course in Science and Philosophy', 5, 4),
 
 CREATE TABLE BasicProject
 (
-    BasProjectID INTEGER PRIMARY KEY,
+    BasProjID INTEGER PRIMARY KEY,
     BasProjName  VARCHAR(255) NOT NULL UNIQUE,
     BasProjECTS  INTEGER      NOT NULL,
     ProgID       INTEGER      NOT NULL,
@@ -138,25 +138,25 @@ CREATE TABLE BasicProject
 );
 
 -- Inserting NatBach basic projects
-INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+INSERT INTO BasicProject (BasProjID, BasProjName, BasProjECTS, ProgID)
 VALUES (1, 'BP1 NatBach', 15, 1),
        (2, 'BP2 NatBach', 15, 1),
        (3, 'BP3 NatBach', 15, 1);
 
 -- Inserting HumTek basic projects
-INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+INSERT INTO BasicProject (BasProjID, BasProjName, BasProjECTS, ProgID)
 VALUES (5, 'BP1 HumTek', 15, 2),
        (6, 'BP2 HumTek', 15, 2),
        (7, 'BP3 HumTek', 15, 2);
 
 -- Inserting SocialScience basic projects
-INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+INSERT INTO BasicProject (BasProjID, BasProjName, BasProjECTS, ProgID)
 VALUES (8, 'BP1 SocialScience', 15, 3),
        (9, 'BP2 SocialScience', 15, 3),
        (10, 'BP3 SocialScience', 15, 3);
 
 -- Inserting GlobalHumanities basic projects
-INSERT INTO BasicProject (BasProjectID, BasProjName, BasProjECTS, ProgID)
+INSERT INTO BasicProject (BasProjID, BasProjName, BasProjECTS, ProgID)
 VALUES (11, 'BP1 GlobalHumanities', 15, 4),
        (12, 'BP2 GlobalHumanities', 15, 4),
        (13, 'BP3 GlobalHumanities', 15, 4);
@@ -170,14 +170,14 @@ VALUES (11, 'BP1 GlobalHumanities', 15, 4),
 
 CREATE TABLE BachelorProject
 (
-    BachProjectID INTEGER PRIMARY KEY,
+    BachProjID INTEGER PRIMARY KEY,
     BachProjName  VARCHAR(255) NOT NULL UNIQUE,
     BachProjECTS  INTEGER      NOT NULL,
     ProgID        INTEGER      NOT NULL,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
 
-INSERT INTO BachelorProject(BachProjectID, BachProjName, BachProjECTS, ProgID)
+INSERT INTO BachelorProject(BachProjID, BachProjName, BachProjECTS, ProgID)
 VALUES (1, 'NatBach Bachelor Project', 15, 1),
        (2, 'HumTek Bachelor Project', 15, 2),
        (3, 'Social Science Bachelor Project', 15, 3),
@@ -319,15 +319,15 @@ VALUES (41, 'Essential Astronomy', 5, 12),
 
 CREATE TABLE ModuleProject
 (
-    ModProjectID   INTEGER PRIMARY KEY,
-    ModProjectName VARCHAR(255) NOT NULL UNIQUE,
-    ModProjectECTS INTEGER      NOT NULL,
+    ModProjID   INTEGER PRIMARY KEY,
+    ModProjName VARCHAR(255) NOT NULL UNIQUE,
+    ModProjECTS INTEGER      NOT NULL,
     ModuleID       INTEGER      NOT NULL,
     FOREIGN KEY (ModuleID) REFERENCES SubjectModule (ModuleID)
 );
 
 -- Inserting subject module projects
-INSERT INTO ModuleProject (ModProjectID, ModProjectName, ModProjectECTS, ModuleID)
+INSERT INTO ModuleProject (ModProjID, ModProjName, ModProjECTS, ModuleID)
 VALUES (1, 'Subject module project in Computer Science', 15, 1),
        (2, 'Subject module project in Philosophy', 15, 2),
        (3, 'Subject module project in Physics', 15, 3),
