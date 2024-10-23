@@ -54,7 +54,6 @@ public class HelloApplication extends Application {
         //Fill Label, Boxes
         con.fillComboBox();
 
-
         // Set up GridPane layout
         GridPane root = new GridPane();
         root.setHgap(10);
