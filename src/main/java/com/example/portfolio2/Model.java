@@ -120,13 +120,33 @@ class Model {
         return bachProjects;
     }
 
-    public List<String> subjectModule() {
+    public List<String> subjectModule(String program) {
         List<String> modules = new ArrayList<>();
-        String query = "SELECT ModuleName FROM SubjectModule";
+        String query;
+
+        // Conditional query based on whether the program is "null" or not
+        if (program.equals("null")) {
+            query = "SELECT ModuleName FROM SubjectModule";
+        } else {
+            query = "SELECT sm.ModuleName " +
+                    "FROM SubjectModule sm " +
+                    "JOIN BachelorProgramme bp ON sm.ProgID = bp.ProgID " +
+                    "WHERE bp.ProgName = ?";
+        }
+
         Connection conn = null;
         try {
             conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            PreparedStatement stmt;
+
+            if (program.equals("null")) {
+                stmt = conn.prepareStatement(query);
+            } else {
+                stmt = conn.prepareStatement(query);
+                stmt.setString(1, program);  // Set the program name if provided
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     modules.add(rs.getString("ModuleName"));
                 }
@@ -136,8 +156,10 @@ class Model {
         } finally {
             closeConnection(conn);
         }
+
         return modules;
     }
+
 
     public List<Activity> subjectCourse(String subject) {
         List<Activity> courses = new ArrayList<>();

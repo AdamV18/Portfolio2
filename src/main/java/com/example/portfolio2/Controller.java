@@ -18,7 +18,7 @@ public class Controller {
     private int electiveCredits = 0;
     private int totalCredits = 0;
 
-    private final int MAX_CREDITS = 180; // Limite de crédits
+    private final int MAX_CREDITS = 110; // Limite de crédits pour basic + elective
     private final int MAX_ELECTIVE_CREDITS = 10; // Because we need at least 40 of basic course so 10 elective max
 
     Controller(Model model, HelloApplication view) {
@@ -30,14 +30,7 @@ public class Controller {
         // Populate comboProgram with strings (BachelorProgramme)
         view.comboProgram.getItems().addAll(model.baseProgram());
 
-        // Populate comboSub1 and comboSub2 with strings (SubjectModule)
-        view.comboSub1.getItems().addAll(model.subjectModule());
-        view.comboSub2.getItems().addAll(model.subjectModule());
 
-        // Populate elective courses with ECTS and Activity names
-        for (Activity elective : model.electiveCourse()) {
-            view.comboElectiveCourse.getItems().add(elective.getActivityECTS() + " - " + elective.getActivityName());
-        }
 
         // Add event listeners for user actions
         view.comboProgram.setOnAction(event -> {
@@ -45,10 +38,17 @@ public class Controller {
             resetSelections();
             addProjects(selectedBase);
             updateComboBasicCourse(selectedBase);
+
+            // Populate Sub1 based on the selected program
+            view.comboSub1.getItems().clear();
+            view.comboSub1.getItems().addAll(model.subjectModule(selectedBase));
+
+            // Reset Sub2 since Sub1 will affect it
+            view.comboSub2.getItems().clear();
         });
 
         view.addBasicCourse.setOnAction(event -> {
-            if (totalCredits < MAX_CREDITS) {
+            if (basicCredits + electiveCredits < MAX_CREDITS) {
                 String selectedCourse = view.comboBasicCourse.getValue();
                 if (selectedCourse != null) {
                     addSelectedCourseToTextAreaBasicCourse(selectedCourse);
@@ -61,17 +61,29 @@ public class Controller {
         view.comboSub1.setOnAction(event -> {
             selectedSub1 = view.comboSub1.getValue();
             updateTextAreaSub1(selectedSub1);
-            view.comboSub2.getItems().remove(selectedSub1);
+
+            // Populate Sub2 with all subject modules except the selected one in Sub1
+            List<String> allModules = model.subjectModule("null");
+            allModules.remove(selectedSub1);  // Remove the selected Sub1
+            view.comboSub2.getItems().clear();
+            view.comboSub2.getItems().addAll(allModules);
         });
 
         view.comboSub2.setOnAction(event -> {
             selectedSub2 = view.comboSub2.getValue();
             updateTextAreaSub2(selectedSub2);
-            view.comboSub1.getItems().remove(selectedSub2);
         });
 
+
+        // Populate elective courses with ECTS and Activity names
+        for (Activity elective : model.electiveCourse()) {
+            view.comboElectiveCourse.getItems().add(elective.getActivityECTS() + " - " + elective.getActivityName());
+        }
+
+
+
         view.addElectiveCourse.setOnAction(event -> {
-            if (totalCredits < MAX_CREDITS) {
+            if (basicCredits + electiveCredits < MAX_CREDITS) {
                 if (electiveCredits < MAX_ELECTIVE_CREDITS) {
                     String selectedElectiveCourse = view.comboElectiveCourse.getValue();
                     if (selectedElectiveCourse != null) {
@@ -182,7 +194,7 @@ public class Controller {
 
     // Disable buttons if the max credits are reached
     private void checkMaxCreditsReached() {
-        if (totalCredits >= MAX_CREDITS) {
+        if (basicCredits + electiveCredits >= MAX_CREDITS) {
             view.addBasicCourse.setDisable(true);
             view.addElectiveCourse.setDisable(true);
         } else if (electiveCredits >= MAX_ELECTIVE_CREDITS){

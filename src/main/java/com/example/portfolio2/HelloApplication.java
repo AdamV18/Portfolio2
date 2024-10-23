@@ -45,8 +45,8 @@ public class HelloApplication extends Application {
     public void start(Stage stage) {
 
         Label program = createLabel("Program");
-        Label subject1 = createLabel("Subject Module 1");
-        Label subject2 = createLabel("Subject Module 2");
+        Label subject1 = createLabel("Subject Module Programme");
+        Label subject2 = createLabel("Subject Module Free Choice");
         Label elective = createLabel("Elective");
         Label basiccourse = createLabel("Choose Basic Courses");
         Label electivecourse = createLabel("Choose Elective Courses");
