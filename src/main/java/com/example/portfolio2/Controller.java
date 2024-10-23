@@ -1,8 +1,8 @@
 package com.example.portfolio2;
 
 import java.util.List;
-import javafx.application.Platform;
 
+import javafx.application.Platform;
 
 
 public class Controller {
@@ -19,6 +19,7 @@ public class Controller {
     private int totalCredits = 0;
 
     private final int MAX_CREDITS = 180; // Limite de crédits
+    private final int MAX_ELECTIVE_CREDITS = 10; // Because we need at least 40 of basic course so 10 elective max
 
     Controller(Model model, HelloApplication view) {
         this.model = model;
@@ -47,7 +48,7 @@ public class Controller {
         });
 
         view.addBasicCourse.setOnAction(event -> {
-            if (canAddMoreCredits()) {
+            if (totalCredits < MAX_CREDITS) {
                 String selectedCourse = view.comboBasicCourse.getValue();
                 if (selectedCourse != null) {
                     addSelectedCourseToTextAreaBasicCourse(selectedCourse);
@@ -70,12 +71,14 @@ public class Controller {
         });
 
         view.addElectiveCourse.setOnAction(event -> {
-            if (canAddMoreCredits()) {
-                String selectedElectiveCourse = view.comboElectiveCourse.getValue();
-                if (selectedElectiveCourse != null) {
-                    addSelectedCourseToTextAreaElective(selectedElectiveCourse);
-                    view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
-                    updateElectiveCredits(extractECTSFromSelection(selectedElectiveCourse));
+            if (totalCredits < MAX_CREDITS) {
+                if (electiveCredits < MAX_ELECTIVE_CREDITS) {
+                    String selectedElectiveCourse = view.comboElectiveCourse.getValue();
+                    if (selectedElectiveCourse != null) {
+                        addSelectedCourseToTextAreaElective(selectedElectiveCourse);
+                        view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
+                        updateElectiveCredits(extractECTSFromSelection(selectedElectiveCourse));
+                    }
                 }
             }
         });
@@ -177,17 +180,15 @@ public class Controller {
         checkMaxCreditsReached();
     }
 
-    // Method to check if the total credits exceed the max limit
-    private boolean canAddMoreCredits() {
-        return totalCredits < MAX_CREDITS;
-    }
-
     // Disable buttons if the max credits are reached
     private void checkMaxCreditsReached() {
         if (totalCredits >= MAX_CREDITS) {
             view.addBasicCourse.setDisable(true);
             view.addElectiveCourse.setDisable(true);
-        } else {
+        } else if (electiveCredits >= MAX_ELECTIVE_CREDITS){
+            view.addElectiveCourse.setDisable(true);
+        }
+        else {
             view.addBasicCourse.setDisable(false);
             view.addElectiveCourse.setDisable(false);
         }
