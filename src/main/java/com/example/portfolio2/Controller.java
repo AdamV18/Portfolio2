@@ -3,6 +3,8 @@ package com.example.portfolio2;
 import java.util.List;
 import javafx.application.Platform;
 
+
+
 public class Controller {
     private Model model;
     private HelloApplication view;
@@ -16,6 +18,7 @@ public class Controller {
     private int electiveCredits = 0;
     private int totalCredits = 0;
 
+    private final int MAX_CREDITS = 180; // Limite de crédits
 
     Controller(Model model, HelloApplication view) {
         this.model = model;
@@ -44,10 +47,13 @@ public class Controller {
         });
 
         view.addBasicCourse.setOnAction(event -> {
-            String selectedCourse = view.comboBasicCourse.getValue();
-            if (selectedCourse != null) {
-                addSelectedCourseToTextAreaBasicCourse(selectedCourse);
-                view.comboBasicCourse.getItems().remove(selectedCourse);
+            if (canAddMoreCredits()) {
+                String selectedCourse = view.comboBasicCourse.getValue();
+                if (selectedCourse != null) {
+                    addSelectedCourseToTextAreaBasicCourse(selectedCourse);
+                    view.comboBasicCourse.getItems().remove(selectedCourse);
+                    updateBasicCredits(extractECTSFromSelection(selectedCourse));
+                }
             }
         });
 
@@ -64,10 +70,13 @@ public class Controller {
         });
 
         view.addElectiveCourse.setOnAction(event -> {
-            String selectedElectiveCourse = view.comboElectiveCourse.getValue();
-            if (selectedElectiveCourse != null) {
-                addSelectedCourseToTextAreaElective(selectedElectiveCourse);
-                view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
+            if (canAddMoreCredits()) {
+                String selectedElectiveCourse = view.comboElectiveCourse.getValue();
+                if (selectedElectiveCourse != null) {
+                    addSelectedCourseToTextAreaElective(selectedElectiveCourse);
+                    view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
+                    updateElectiveCredits(extractECTSFromSelection(selectedElectiveCourse));
+                }
             }
         });
     }
@@ -76,14 +85,12 @@ public class Controller {
         // Append bachelor projects
         for (Activity project : model.bachelorProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
-            System.out.println(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
             updateBasicCredits(project.getActivityECTS());
         }
 
         // Append base projects
         for (Activity baseProject : model.baseProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(baseProject.getActivityECTS() + " - " + baseProject.getActivityName() + "\n");
-            System.out.println(baseProject.getActivityECTS() + " - " + baseProject.getActivityName() + "\n");
             updateBasicCredits(baseProject.getActivityECTS());
         }
     }
@@ -102,20 +109,13 @@ public class Controller {
         view.textAreaBasicCourse.appendText(course + "\n");
     }
 
-
-
-
-
-
     private void addSelectedCourseToTextAreaElective(String course) {
         view.textAreaElectiveCourse.appendText(course + "\n");
     }
 
-
-
-
     private void updateTextAreaSub1(String subject) {
         view.textAreaSub1.clear();
+        sub1Credits = 0;
         view.textAreaSub1.appendText(model.subjectProject(subject).getActivityECTS() + " - " + model.subjectProject(subject).getActivityName() + "\n");
         updateSub1Credits(model.subjectProject(subject).getActivityECTS());
         List<Activity> subjectCourses = model.subjectCourse(subject);
@@ -129,19 +129,69 @@ public class Controller {
 
     private void updateTextAreaSub2(String subject) {
         view.textAreaSub2.clear();
+        sub2Credits = 0;
         view.textAreaSub2.appendText(model.subjectProject(subject).getActivityECTS() + " - " + model.subjectProject(subject).getActivityName() + "\n");
         updateSub2Credits(model.subjectProject(subject).getActivityECTS());
         List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
             for (Activity course : subjectCourses) {
-                view.textAreaSub2.appendText( course.getActivityECTS() + " - " + course.getActivityName() + "\n");
+                view.textAreaSub2.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
                 updateSub2Credits(course.getActivityECTS());
             }
         }
     }
 
+    // Extract ECTS from ComboBox selection (format is "ECTS - Course Name")
+    private int extractECTSFromSelection(String courseSelection) {
+        String[] parts = courseSelection.split(" - ");
+        return Integer.parseInt(parts[0].trim());
+    }
 
+    private void updateBasicCredits(int credits) {
+        basicCredits += credits;
+        view.crBasic.setText("Basic Credits: " + basicCredits);
+        updateTotalCredits(credits);
+    }
 
+    private void updateSub1Credits(int credits) {
+        sub1Credits += credits;
+        view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
+        updateTotalCredits(credits);
+    }
+
+    private void updateSub2Credits(int credits) {
+        sub2Credits += credits;
+        view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
+        updateTotalCredits(credits);
+    }
+
+    private void updateElectiveCredits(int credits) {
+        electiveCredits += credits;
+        view.crElective.setText("Elective Credits: " + electiveCredits);
+        updateTotalCredits(credits);
+    }
+
+    private void updateTotalCredits(int credits) {
+        totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits;
+        view.crTotal.setText("Programme Credits: " + totalCredits);
+        checkMaxCreditsReached();
+    }
+
+    // Method to check if the total credits exceed the max limit
+    private boolean canAddMoreCredits() {
+        return totalCredits < MAX_CREDITS;
+    }
+
+    // Disable buttons if the max credits are reached
+    private void checkMaxCreditsReached() {
+        if (totalCredits >= MAX_CREDITS) {
+            view.addBasicCourse.setDisable(true);
+            view.addElectiveCourse.setDisable(true);
+        } else {
+            view.addBasicCourse.setDisable(false);
+            view.addElectiveCourse.setDisable(false);
+        }
+    }
 
     private void resetSelections() {
         view.textAreaBasicCourse.clear();
@@ -156,46 +206,14 @@ public class Controller {
         selectedSub1 = null;
         selectedSub2 = null;
 
-        int basicCredits = 0;
-        int sub1Credits = 0;
-        int sub2Credits = 0;
-        int electiveCredits = 0;
-        int totalCredits = 0;
+        basicCredits = 0;
+        sub1Credits = 0;
+        sub2Credits = 0;
+        electiveCredits = 0;
+        totalCredits = 0;
 
-
-    }
-
-
-
-
-
-    private void updateBasicCredits(int credits) {
-        basicCredits +=credits;
-        view.crBasic.setText("Basic Credits: " + basicCredits);
-        updateTotalCredits(credits);
-    }
-
-
-    private void updateSub1Credits(int credits) {
-        sub1Credits +=credits;
-        view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
-        updateTotalCredits(credits);
-    }
-
-    private void updateSub2Credits(int credits) {
-        sub2Credits +=credits;
-        view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
-        updateTotalCredits(credits);
-    }
-
-    private void updateElectiveCredits(int credits) {
-        electiveCredits +=credits;
-        view.crElective.setText("Elective Credits: " + electiveCredits);
-        updateTotalCredits(credits);
-    }
-
-    private void updateTotalCredits(int credits) {
-        totalCredits +=credits;
-        view.crTotal.setText("Programme Credits: " + totalCredits);
+        // Re-enable buttons if reset
+        view.addBasicCourse.setDisable(false);
+        view.addElectiveCourse.setDisable(false);
     }
 }
