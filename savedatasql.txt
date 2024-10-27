@@ -31,7 +31,7 @@ CREATE TABLE Student
     StudName    VARCHAR(255) NOT NULL,
     StudSurname VARCHAR(255) NOT NULL,
     StudEmail   VARCHAR(255) NOT NULL UNIQUE,
-    ProgID      INTEGER      NOT NULL,
+    ProgID      INTEGER     ,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
 
@@ -42,7 +42,7 @@ VALUES (79994, 'Julien', 'Perdrix', 'stud-perdrix@ruc.dk', 1),
        (79995, 'Adam', 'Vanston', 'stud-armv@ruc.dk', 1),
        (79997, 'Ali', 'Özhavala', 'stud-oezhavala@ruc.dk', 1),
        (79992, 'Hannah', 'Luithle', 'stud-luithle@ruc.dk', 1),
-       (1, 'Test', 'Tester', 'stud-test@ruc.dk', 0);
+       (1, 'Test', 'Tester', 'stud-test@ruc.dk', NULL);
 
 
 
