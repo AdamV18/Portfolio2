@@ -26,21 +26,136 @@ class Model {
         }
     }
 
-    public List<String> baseProgram() {
-        List<String> programs = new ArrayList<>();
-        String query = "SELECT ProgName FROM BachelorProgramme";
+    public void clearCourseParticipation() {
+        String deleteStudent = "UPDATE Student SET ProgID = 0 WHERE StudID = 1";
+        String deleteSubjectModules = "UPDATE SubjectModuleParticipation SET ModuleProgID = 0, ModuleChoiceID = 0 WHERE StudID = 1";
+        String deleteBasicCourses = "DELETE FROM BasicCourseParticipation WHERE StudID = 1";
+        String deleteElectives = "DELETE FROM ElectiveParticipation WHERE StudID = 1";
+
         Connection conn = null;
         try {
             conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    programs.add(rs.getString("ProgName"));
-                }
+            try (PreparedStatement stmt = conn.prepareStatement(deleteStudent)) {
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = conn.prepareStatement(deleteSubjectModules)) {
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = conn.prepareStatement(deleteBasicCourses)) {
+                stmt.executeUpdate();
+            }
+            try (PreparedStatement stmt = conn.prepareStatement(deleteElectives)) {
+                stmt.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             closeConnection(conn);
+        }
+    }
+
+    public void storeProgram(String programName) {
+        String updateQuery = "UPDATE Student SET ProgID = ? WHERE StudID = 1";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+                updateStmt.setString(1, programName);
+                updateStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+
+    public void storeBasicCourse(String courseName) {
+        String query = "INSERT INTO BasicCourseParticipation (BasCourseID, StudID) VALUES (?, 1)";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, courseName);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+    public void storeSubjectModule1(String moduleName) {
+        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleProgID = 0 WHERE StudID = 1";
+        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleProgID = ? WHERE StudID = 1";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement clearStmt = conn.prepareStatement(clearQuery)) {
+                clearStmt.executeUpdate();
+            }
+            try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+                updateStmt.setString(1, moduleName);
+                updateStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+
+    public void storeSubjectModule2(String moduleName) {
+        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleChoiceID = 0 WHERE StudID = 1";
+        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleChoiceID = ? WHERE StudID = 1";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement clearStmt = conn.prepareStatement(clearQuery)) {
+                clearStmt.executeUpdate();
+            }
+            try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+                updateStmt.setString(1, moduleName);
+                updateStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+
+    public void storeElectiveCourse(String electiveCourse) {
+        String query = "INSERT INTO ElectiveParticipation (ElCourseID, StudID) VALUES (?, 1)";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, electiveCourse);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+    public List<String> baseProgram() {
+        List<String> programs = new ArrayList<>();
+        String query = "SELECT ProgName FROM BachelorProgramme";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                programs.add(rs.getString("ProgName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return programs;
     }
@@ -48,24 +163,19 @@ class Model {
     public List<Activity> baseCourse(String base) {
         List<Activity> courses = new ArrayList<>();
         String query = "SELECT BasCourseName, BasCourseECTS, BasCourseID FROM BasicCourse bc JOIN BachelorProgramme bp ON bc.ProgID = bp.ProgID WHERE bp.ProgName = ?";
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1, base);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        String courseName = rs.getString("BasCourseName");
-                        int courseECTS = rs.getInt("BasCourseECTS");
-                        int courseID = rs.getInt("BasCourseID");
-                        courses.add(new Activity(courseName, courseECTS, courseID, false));
-                    }
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, base);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String courseName = rs.getString("BasCourseName");
+                    int courseECTS = rs.getInt("BasCourseECTS");
+                    int courseID = rs.getInt("BasCourseID");
+                    courses.add(new Activity(courseName, courseECTS, courseID, false));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            closeConnection(conn);
         }
         return courses;
     }
@@ -124,7 +234,6 @@ class Model {
         List<String> modules = new ArrayList<>();
         String query;
 
-        // Conditional query based on whether the program is "null" or not
         if (program.equals("null")) {
             query = "SELECT ModuleName FROM SubjectModule";
         } else {
@@ -143,7 +252,7 @@ class Model {
                 stmt = conn.prepareStatement(query);
             } else {
                 stmt = conn.prepareStatement(query);
-                stmt.setString(1, program);  // Set the program name if provided
+                stmt.setString(1, program);
             }
 
             try (ResultSet rs = stmt.executeQuery()) {
@@ -159,7 +268,6 @@ class Model {
 
         return modules;
     }
-
 
     public List<Activity> subjectCourse(String subject) {
         List<Activity> courses = new ArrayList<>();
@@ -186,29 +294,6 @@ class Model {
         return courses;
     }
 
-    public Activity subjectProject(String subject) {
-        String query = "SELECT ModProjName, ModProjECTS, ModProjID FROM ModuleProject mp JOIN SubjectModule sm ON mp.ModuleID = sm.ModuleID WHERE sm.ModuleName = ?";
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1, subject);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        String projName = rs.getString("ModProjName");
-                        int projECTS = rs.getInt("ModProjECTS");
-                        int projID = rs.getInt("ModProjID");
-                        return new Activity(projName, projECTS, projID, true);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-        return new Activity("Subject module project in " + subject, 0, -1, true);
-    }
 
     public List<Activity> electiveCourse() {
         List<Activity> electives = new ArrayList<>();
@@ -232,6 +317,26 @@ class Model {
         return electives;
     }
 
+
+    public Activity subjectProject(String subject) {
+        String query = "SELECT ModProjName, ModProjECTS, ModProjID FROM ModuleProject mp JOIN SubjectModule sm ON mp.ModuleID = sm.ModuleID WHERE sm.ModuleName = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, subject);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String projName = rs.getString("ModProjName");
+                    int projECTS = rs.getInt("ModProjECTS");
+                    int projID = rs.getInt("ModProjID");
+                    return new Activity(projName, projECTS, projID, true);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new Activity("Subject module project in " + subject, 0, -1, true);
+    }
+
     int courseWeight(String course) {
         String query = "SELECT ModCourseECTS FROM ModuleCourse WHERE ModCourseName = ?";
         Connection conn = null;
@@ -250,7 +355,7 @@ class Model {
         } finally {
             closeConnection(conn);
         }
-        return 5; // Default ECTS value
+        return 5;
     }
 }
 

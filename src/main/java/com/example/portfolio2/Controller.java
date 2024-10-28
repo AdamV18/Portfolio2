@@ -1,9 +1,7 @@
 package com.example.portfolio2;
 
 import java.util.List;
-
 import javafx.application.Platform;
-
 
 public class Controller {
     private Model model;
@@ -18,8 +16,8 @@ public class Controller {
     private int electiveCredits = 0;
     private int totalCredits = 0;
 
-    private final int MAX_CREDITS = 110; // Limite de crédits pour basic + elective
-    private final int MAX_ELECTIVE_CREDITS = 10; // Because we need at least 40 of basic course so 10 elective max
+    private final int MAX_CREDITS = 110;
+    private final int MAX_ELECTIVE_CREDITS = 10;
 
     Controller(Model model, HelloApplication view) {
         this.model = model;
@@ -27,24 +25,21 @@ public class Controller {
     }
 
     public void fillComboBox() {
-        // Populate comboProgram with strings (BachelorProgramme)
         view.comboProgram.getItems().addAll(model.baseProgram());
 
-
-
-        // Add event listeners for user actions
         view.comboProgram.setOnAction(event -> {
             String selectedBase = view.comboProgram.getValue();
             resetSelections();
+            resetDatabase();
             addProjects(selectedBase);
             updateComboBasicCourse(selectedBase);
 
-            // Populate Sub1 based on the selected program
             view.comboSub1.getItems().clear();
             view.comboSub1.getItems().addAll(model.subjectModule(selectedBase));
 
-            // Reset Sub2 since Sub1 will affect it
             view.comboSub2.getItems().clear();
+
+            model.storeProgram(selectedBase);
         });
 
         view.addBasicCourse.setOnAction(event -> {
@@ -54,6 +49,8 @@ public class Controller {
                     addSelectedCourseToTextAreaBasicCourse(selectedCourse);
                     view.comboBasicCourse.getItems().remove(selectedCourse);
                     updateBasicCredits(extractECTSFromSelection(selectedCourse));
+
+                    model.storeBasicCourse(selectedCourse);
                 }
             }
         });
@@ -62,25 +59,24 @@ public class Controller {
             selectedSub1 = view.comboSub1.getValue();
             updateTextAreaSub1(selectedSub1);
 
-            // Populate Sub2 with all subject modules except the selected one in Sub1
             List<String> allModules = model.subjectModule("null");
-            allModules.remove(selectedSub1);  // Remove the selected Sub1
+            allModules.remove(selectedSub1);
             view.comboSub2.getItems().clear();
             view.comboSub2.getItems().addAll(allModules);
+
+            model.storeSubjectModule1(selectedSub1);
         });
 
         view.comboSub2.setOnAction(event -> {
             selectedSub2 = view.comboSub2.getValue();
             updateTextAreaSub2(selectedSub2);
+
+            model.storeSubjectModule2(selectedSub2);
         });
 
-
-        // Populate elective courses with ECTS and Activity names
         for (Activity elective : model.electiveCourse()) {
             view.comboElectiveCourse.getItems().add(elective.getActivityECTS() + " - " + elective.getActivityName());
         }
-
-
 
         view.addElectiveCourse.setOnAction(event -> {
             if (basicCredits + electiveCredits < MAX_CREDITS) {
@@ -90,6 +86,8 @@ public class Controller {
                         addSelectedCourseToTextAreaElective(selectedElectiveCourse);
                         view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
                         updateElectiveCredits(extractECTSFromSelection(selectedElectiveCourse));
+
+                        model.storeElectiveCourse(selectedElectiveCourse);
                     }
                 }
             }
@@ -97,13 +95,11 @@ public class Controller {
     }
 
     private void addProjects(String selectedBase) {
-        // Append bachelor projects
         for (Activity project : model.bachelorProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
             updateBasicCredits(project.getActivityECTS());
         }
 
-        // Append base projects
         for (Activity baseProject : model.baseProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(baseProject.getActivityECTS() + " - " + baseProject.getActivityName() + "\n");
             updateBasicCredits(baseProject.getActivityECTS());
@@ -156,7 +152,6 @@ public class Controller {
         }
     }
 
-    // Extract ECTS from ComboBox selection (format is "ECTS - Course Name")
     private int extractECTSFromSelection(String courseSelection) {
         String[] parts = courseSelection.split(" - ");
         return Integer.parseInt(parts[0].trim());
@@ -192,7 +187,6 @@ public class Controller {
         checkMaxCreditsReached();
     }
 
-    // Disable buttons if the max credits are reached
     private void checkMaxCreditsReached() {
         if (basicCredits + electiveCredits >= MAX_CREDITS) {
             view.addBasicCourse.setDisable(true);
@@ -225,8 +219,11 @@ public class Controller {
         electiveCredits = 0;
         totalCredits = 0;
 
-        // Re-enable buttons if reset
         view.addBasicCourse.setDisable(false);
         view.addElectiveCourse.setDisable(false);
+    }
+
+    private void resetDatabase() {
+        model.clearCourseParticipation();
     }
 }
