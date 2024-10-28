@@ -46,11 +46,14 @@ public class Controller {
             if (basicCredits + electiveCredits < MAX_CREDITS) {
                 String selectedCourse = view.comboBasicCourse.getValue();
                 if (selectedCourse != null) {
+                    String basicName = selectedCourse.split(" - ")[1];
+                    int credits = model.getBasicCourseCredits(basicName);
+
                     addSelectedCourseToTextAreaBasicCourse(selectedCourse);
                     view.comboBasicCourse.getItems().remove(selectedCourse);
-                    updateBasicCredits(extractECTSFromSelection(selectedCourse));
+                    updateBasicCredits(credits);
 
-                    model.storeBasicCourse(selectedCourse);
+                    model.storeBasicCourse(basicName);
                 }
             }
         });
@@ -83,11 +86,14 @@ public class Controller {
                 if (electiveCredits < MAX_ELECTIVE_CREDITS) {
                     String selectedElectiveCourse = view.comboElectiveCourse.getValue();
                     if (selectedElectiveCourse != null) {
+                        String electiveName = selectedElectiveCourse.split(" - ")[1];
+                        int credits = model.getElectiveCourseCredits(electiveName);
+
                         addSelectedCourseToTextAreaElective(selectedElectiveCourse);
                         view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
-                        updateElectiveCredits(extractECTSFromSelection(selectedElectiveCourse));
+                        updateElectiveCredits(credits);
 
-                        model.storeElectiveCourse(selectedElectiveCourse);
+                        model.storeElectiveCourse(electiveName);
                     }
                 }
             }
@@ -97,12 +103,12 @@ public class Controller {
     private void addProjects(String selectedBase) {
         for (Activity project : model.bachelorProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
-            updateBasicCredits(project.getActivityECTS());
+            updateBasicCredits(model.getBachelorProjectCredits(project.getActivityName()));
         }
 
         for (Activity baseProject : model.baseProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(baseProject.getActivityECTS() + " - " + baseProject.getActivityName() + "\n");
-            updateBasicCredits(baseProject.getActivityECTS());
+            updateBasicCredits(model.getBasicProjectCredits(baseProject.getActivityName()));
         }
     }
 
@@ -127,13 +133,16 @@ public class Controller {
     private void updateTextAreaSub1(String subject) {
         view.textAreaSub1.clear();
         sub1Credits = 0;
-        view.textAreaSub1.appendText(model.subjectProject(subject).getActivityECTS() + " - " + model.subjectProject(subject).getActivityName() + "\n");
-        updateSub1Credits(model.subjectProject(subject).getActivityECTS());
+        Activity project = model.subjectProject(subject);
+        view.textAreaSub1.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
+        updateSub1Credits(model.getSubjectModuleCredits(project.getActivityID()));
+
         List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
             for (Activity course : subjectCourses) {
                 view.textAreaSub1.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
-                updateSub1Credits(course.getActivityECTS());
+                updateSub1Credits(model.getSubjectModuleCredits(course.getActivityID()));
+                System.out.println(course.getActivityECTS());
             }
         }
     }
@@ -141,20 +150,17 @@ public class Controller {
     private void updateTextAreaSub2(String subject) {
         view.textAreaSub2.clear();
         sub2Credits = 0;
-        view.textAreaSub2.appendText(model.subjectProject(subject).getActivityECTS() + " - " + model.subjectProject(subject).getActivityName() + "\n");
-        updateSub2Credits(model.subjectProject(subject).getActivityECTS());
+        Activity project = model.subjectProject(subject);
+        view.textAreaSub2.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
+        updateSub2Credits(model.getSubjectModuleCredits(project.getActivityID()));
+
         List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
             for (Activity course : subjectCourses) {
                 view.textAreaSub2.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
-                updateSub2Credits(course.getActivityECTS());
+                updateSub2Credits(model.getSubjectModuleCredits(course.getActivityID()));
             }
         }
-    }
-
-    private int extractECTSFromSelection(String courseSelection) {
-        String[] parts = courseSelection.split(" - ");
-        return Integer.parseInt(parts[0].trim());
     }
 
     private void updateBasicCredits(int credits) {
@@ -164,13 +170,13 @@ public class Controller {
     }
 
     private void updateSub1Credits(int credits) {
-        sub1Credits += credits;
+        sub1Credits = credits;
         view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
         updateTotalCredits(credits);
     }
 
     private void updateSub2Credits(int credits) {
-        sub2Credits += credits;
+        sub2Credits = credits;
         view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
         updateTotalCredits(credits);
     }
