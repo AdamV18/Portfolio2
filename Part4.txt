@@ -1,43 +1,19 @@
--- V1 Without selecting the student
-
-SELECT SUM(
-        bc.BasCourseECTS +
-        bp.BasProjECTS +
-        bachp.BachProjECTS +
-        mc.ModCourseECTS +
-        mp.ModProjECTS +
-        ec.ElCourseECTS
-) AS total_ects
-FROM Student s
-         LEFT JOIN BasicCourseParticipation bcp ON s.StudID = bcp.StudID
-         LEFT JOIN SubjectModuleParticipation smp ON s.StudID = smp.StudID
-         LEFT JOIN ElectiveParticipation ep ON s.StudID = ep.StudID
-         LEFT JOIN BasicCourse bc ON bcp.BasCourseID = bc.BasCourseID
-         LEFT JOIN ModuleProject mp ON smp.ModuleID = mp.ModuleID
-         LEFT JOIN ModuleCourse mc ON smp.ModuleID = mc.ModuleID
-         LEFT JOIN ElectiveCourse ec ON ep.ElCourseID = ec.ElCourseID
-         LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID
-         LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID;
-
-
--- V2 With the selection of the student
-
-SELECT s.StudID, SUM(
-        bc.BasCourseECTS +
-        bp.BasProjECTS +
-        bachp.BachProjECTS +
-        mc.ModCourseECTS +
-        mp.ModProjECTS +
-        ec.ElCourseECTS
-) AS total_ects
-FROM Student s
-         LEFT JOIN BasicCourseParticipation bcp ON s.StudID = bcp.StudID
-         LEFT JOIN SubjectModuleParticipation smp ON s.StudID = smp.StudID
-         LEFT JOIN ElectiveParticipation ep ON s.StudID = ep.StudID
-         LEFT JOIN BasicCourse bc ON bcp.BasCourseID = bc.BasCourseID
-         LEFT JOIN ModuleProject mp ON smp.ModuleID = mp.ModuleID
-         LEFT JOIN ModuleCourse mc ON smp.ModuleID = mc.ModuleID
-         LEFT JOIN ElectiveCourse ec ON ep.ElCourseID = ec.ElCourseID
-         LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID
-         LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID
-         WHERE s.StudID = '1';
+SELECT (
+       (SELECT IFNULL(SUM(bc.BasCourseECTS), 0)
+                FROM BasicCourse bc
+                JOIN BasicCourseParticipation bcp ON bc.BasCourseID = bcp.BasCourseID
+                WHERE bcp.StudID = s.StudID) +
+                (SELECT IFNULL(SUM(bp.BasProjECTS), 0) FROM BasicProject bp
+                WHERE bp.ProgID = s.ProgID) +
+                (SELECT IFNULL(SUM(bachp.BachProjECTS), 0) FROM BachelorProject bachp
+                WHERE bachp.ProgID = s.ProgID) +
+                (SELECT IFNULL(SUM(mc.ModCourseECTS), 0) FROM ModuleCourse mc
+                JOIN SubjectModuleParticipation smp ON mc.ModuleID = smp.ModuleID
+                WHERE smp.StudID = s.StudID) +
+                (SELECT IFNULL(SUM(mp.ModProjECTS), 0) FROM ModuleProject mp
+                JOIN SubjectModuleParticipation smp ON mp.ModuleID = smp.ModuleID
+                WHERE smp.StudID = s.StudID) +
+                (SELECT IFNULL(SUM(ec.ElCourseECTS), 0) FROM ElectiveCourse ec
+                JOIN ElectiveParticipation ep ON ec.ElCourseID = ep.ElCourseID
+                WHERE ep.StudID = s.StudID)
+                ) AS total_ects FROM Student s WHERE s.StudID = 1;
