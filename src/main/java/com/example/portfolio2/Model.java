@@ -28,7 +28,10 @@ class Model {
 
     public void clearCourseParticipation() {
         String deleteStudent = "UPDATE Student SET ProgID = 0 WHERE StudID = 1";
-        String deleteSubjectModules = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1";
+
+        String deleteSubjectModules = "DELETE FROM SubjectModuleParticipation WHERE StudID = 1";
+
+
         String deleteBasicCourses = "DELETE FROM BasicCourseParticipation WHERE StudID = 1";
         String deleteElectives = "DELETE FROM ElectiveParticipation WHERE StudID = 1";
 
@@ -104,8 +107,12 @@ class Model {
 
     public void storeSubjectModule1(String moduleName) {
         String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1 AND ModuleNum = 1";
-        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ? WHERE StudID = 1 AND ModuleNum = 1";
+
+
+        String clearQuery = "DELETE FROM SubjectModuleParticipation WHERE StudID = 1 AND ModuleNum = 1";
+        String updateQuery = "INSERT INTO SubjectModuleParticipation (StudID, ModuleID, ModuleNum) VALUES (1, ?, 1)";
+
+
         Connection conn = null;
         try {
             conn = getConnection();
@@ -128,12 +135,15 @@ class Model {
         } finally {
             closeConnection(conn);
         }
+
+
+
     }
 
     public void storeSubjectModule2(String moduleName) {
         String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1 AND ModuleNum = 2";
-        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ? WHERE StudID = 1 AND ModuleNum = 2";
+        String clearQuery = "DELETE FROM SubjectModuleParticipation WHERE StudID = 1 AND ModuleNum = 2";
+        String updateQuery = "INSERT INTO SubjectModuleParticipation (StudID, ModuleID, ModuleNum) VALUES (1, ?, 2)";
         Connection conn = null;
         try {
             conn = getConnection();
