@@ -23,9 +23,7 @@ public class HelloApplication extends Application {
     public ComboBox<String> comboElectiveCourse = createCombobox();
 
 
-    public Button buttonProgram = createButton("Select");
-    public Button buttonSub1 = createButton("Select");
-    public Button buttonSub2 = createButton("Select");
+
     public Button addBasicCourse = createButton("Add Course");
     public Button addElectiveCourse = createButton("Add Course");
 
@@ -47,7 +45,6 @@ public class HelloApplication extends Application {
         Label program = createLabel("Program");
         Label subject1 = createLabel("Subject Module Programme");
         Label subject2 = createLabel("Subject Module Free Choice");
-        Label elective = createLabel("Elective");
         Label basiccourse = createLabel("Choose Basic Courses");
         Label electivecourse = createLabel("Choose Elective Courses");
 
@@ -65,15 +62,12 @@ public class HelloApplication extends Application {
         root.add(program, 0, 0);
         root.add(subject1, 1, 0);
         root.add(subject2, 2, 0);
-        root.add(elective, 3, 0);
 
         root.add(comboProgram, 0, 1);
         root.add(comboSub1, 1, 1);
         root.add(comboSub2, 2, 1);
 
-        root.add(buttonProgram, 0, 2);
-        root.add(buttonSub1, 1, 2);
-        root.add(buttonSub2, 2, 2);
+
 
         root.add(basiccourse, 0, 3);
         root.add(electivecourse, 3, 3);
