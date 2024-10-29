@@ -33,7 +33,6 @@ public class Controller {
             resetDatabase();
 
             addProjects(selectedBase);
-
             updateComboBasicCourse(selectedBase);
 
             view.comboSub1.getItems().clear();
@@ -69,8 +68,6 @@ public class Controller {
             allModules.remove(selectedSub1);
             view.comboSub2.getItems().clear();
             view.comboSub2.getItems().addAll(allModules);
-
-
         });
 
         view.comboSub2.setOnAction(event -> {
@@ -89,7 +86,6 @@ public class Controller {
                     String selectedElectiveCourse = view.comboElectiveCourse.getValue();
                     if (selectedElectiveCourse != null) {
                         String electiveName = selectedElectiveCourse.split(" - ")[1];
-                        int credits = model.getElectiveCourseCredits(electiveName);
 
                         addSelectedCourseToTextAreaElective(selectedElectiveCourse);
                         view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
@@ -163,14 +159,13 @@ public class Controller {
     }
 
 
-
     private void updateCredits() {
         basicCredits = model.basicCourseCredits();
         sub1Credits = model.subjectModuleCredits(1);
         sub2Credits = model.subjectModuleCredits(2);
         electiveCredits = model.electiveCourseCredits();
         totalCredits = model.totalCredits();
-        //totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits;
+        //totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits; is missing the 60 projects credits
 
         view.crBasic.setText("Basic Credits: " + basicCredits);
         view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
@@ -178,10 +173,7 @@ public class Controller {
         view.crElective.setText("Elective Credits: " + electiveCredits);
         view.crTotal.setText("Programme Credits: " + totalCredits);
 
-
         checkMaxCreditsReached();
-
-        //System.out.println("Credits total : " + model.totalCredits());
     }
 
     private void checkMaxCreditsReached() {
@@ -209,14 +201,6 @@ public class Controller {
 
         selectedSub1 = null;
         selectedSub2 = null;
-
-        basicCredits = sub1Credits = sub2Credits = electiveCredits = totalCredits = 0;
-
-        view.crBasic.setText("Basic Credits: " + basicCredits);
-        view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
-        view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
-        view.crElective.setText("Elective Credits: " + electiveCredits);
-        view.crTotal.setText("Programme Credits: " + totalCredits);
 
         view.addBasicCourse.setDisable(false);
         view.addElectiveCourse.setDisable(false);

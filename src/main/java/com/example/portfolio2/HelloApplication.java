@@ -22,11 +22,8 @@ public class HelloApplication extends Application {
     public ComboBox<String> comboBasicCourse = createCombobox();
     public ComboBox<String> comboElectiveCourse = createCombobox();
 
-
-
     public Button addBasicCourse = createButton("Add Course");
     public Button addElectiveCourse = createButton("Add Course");
-
 
     public TextArea textAreaBasicCourse = createTextArea();
     public TextArea textAreaSub1 = createTextArea();
@@ -92,9 +89,6 @@ public class HelloApplication extends Application {
         stage.setTitle("Choose your fighter !");
         stage.setScene(scene);
         stage.show();
-
-
-
     }
 
     public static void main(String[] args) {
@@ -125,7 +119,6 @@ public class HelloApplication extends Application {
         TextArea textArea = new TextArea();
         textArea.setPrefSize(200, 300);
         textArea.setEditable(false);
-
         return textArea;
     }
 }

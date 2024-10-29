@@ -375,90 +375,6 @@ class Model {
         return credits;
     }
 
-    public int getBasicProjectCredits(String projectName) {
-        String query = "SELECT BasProjECTS FROM BasicProject WHERE BasProjName = ?";
-        int credits = 0;
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1, projectName);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    credits = rs.getInt("BasProjECTS");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-        return credits;
-    }
-
-    public int getBachelorProjectCredits(String projectName) {
-        String query = "SELECT BachProjECTS FROM BachelorProject WHERE BachProjName = ?";
-        int credits = 0;
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1, projectName);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    credits = rs.getInt("BachProjECTS");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-        return credits;
-    }
-
-    public int getElectiveCourseCredits(String electiveName) {
-        String query = "SELECT ElCourseECTS FROM ElectiveCourse WHERE ElCourseName = ?";
-        int credits = 0;
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1, electiveName);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    credits = rs.getInt("ElCourseECTS");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-        return credits;
-    }
-
-    public int getSubjectModuleCredits(int moduleID) {
-        String query = "SELECT ModuleECTS FROM SubjectModule WHERE ModuleID = ?";
-        int credits = 0;
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setInt(1, moduleID);
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    credits = rs.getInt("ModuleECTS");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-        return credits;
-    }
-
 
     public int basicCourseCredits() {
         String query = "SELECT IFNULL(SUM(bc.BasCourseECTS), 0) AS basic_course_credits " +
@@ -466,7 +382,22 @@ class Model {
                 "JOIN BasicCourseParticipation bcp ON bc.BasCourseID = bcp.BasCourseID " +
                 "WHERE bcp.StudID = 1;";
 
-        return executeCreditQuery(query);
+        int credits = 0;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    credits = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+        return credits;
     }
 
 
@@ -476,7 +407,22 @@ class Model {
                 "JOIN ElectiveParticipation ep ON ec.ElCourseID = ep.ElCourseID " +
                 "WHERE ep.StudID = 1;";
 
-        return executeCreditQuery(query);
+        int credits = 0;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    credits = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+        return credits;
     }
 
 
@@ -534,9 +480,7 @@ class Model {
                 "     FROM ElectiveCourse ec " +
                 "     JOIN ElectiveParticipation ep ON ec.ElCourseID = ep.ElCourseID " +
                 "     WHERE ep.StudID = s.StudID) " +
-                ") AS total_ects " +
-                "FROM Student s " +
-                "WHERE s.StudID = 1;";
+                ") AS total_ects FROM Student s WHERE s.StudID = 1;";
 
         int totalCredits = 0;
         Connection conn = null;
@@ -554,27 +498,6 @@ class Model {
             closeConnection(conn);
         }
         return totalCredits;
-    }
-
-
-
-    private int executeCreditQuery(String query) {
-        int credits = 0;
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    credits = rs.getInt(1);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-        return credits;
     }
 
 }
