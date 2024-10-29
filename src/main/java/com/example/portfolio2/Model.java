@@ -104,8 +104,8 @@ class Model {
 
     public void storeSubjectModule1(String moduleName) {
         String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1, ModuleNum = 1";
-        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ?, ModuleNum = 1 WHERE StudID = 1";
+        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1 AND ModuleNum = 1";
+        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ? WHERE StudID = 1 AND ModuleNum = 1";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -132,8 +132,8 @@ class Model {
 
     public void storeSubjectModule2(String moduleName) {
         String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1, ModuleNum = 2";
-        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ?, ModuleNum = 2 WHERE StudID = 1";
+        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1 AND ModuleNum = 2";
+        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ? WHERE StudID = 1 AND ModuleNum = 2";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -480,7 +480,7 @@ class Model {
 
     public int totalCredits() {
         String sumCredit = "SELECT SUM(" +
-                "bc.BasCourseECTS + bp.BasProjECTS + bachp.BachProjECTS + mc.ModCourseECTS + mp.ModProjectECTS + ec.ElCourseECTS)" +
+                "bc.BasCourseECTS + bp.BasProjECTS + bachp.BachProjECTS + mc.ModCourseECTS + mp.ModProjECTS + ec.ElCourseECTS)" +
                 " AS total_ects " +
                 "FROM Student s " +
                 "LEFT JOIN BasicCourseParticipation bcp ON s.StudID = bcp.StudID " +

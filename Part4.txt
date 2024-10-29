@@ -5,7 +5,7 @@ SELECT SUM(
         bp.BasProjECTS +
         bachp.BachProjECTS +
         mc.ModCourseECTS +
-        mp.ModProjectECTS +
+        mp.ModProjECTS +
         ec.ElCourseECTS
 ) AS total_ects
 FROM Student s
@@ -27,7 +27,7 @@ SELECT s.StudID, SUM(
         bp.BasProjECTS +
         bachp.BachProjECTS +
         mc.ModCourseECTS +
-        mp.ModProjectECTS +
+        mp.ModProjECTS +
         ec.ElCourseECTS
 ) AS total_ects
 FROM Student s

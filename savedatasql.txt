@@ -408,14 +408,15 @@ CREATE TABLE BasicCourseParticipation
 CREATE TABLE SubjectModuleParticipation
 (
     StudID      INTEGER NOT NULL,
-    ModuleProgID INTEGER NOT NULL,
-    ModuleChoiceID INTEGER NOT NULL,
+    ModuleID INTEGER NOT NULL,
+    ModuleNum INTEGER NOT NULL,
     FOREIGN KEY (StudID) REFERENCES Student (StudID),
-    FOREIGN KEY (ModuleProgID) REFERENCES SubjectModule (ModuleID)
-    FOREIGN KEY (ModuleChoiceID) REFERENCES SubjectModule (ModuleID)
+    FOREIGN KEY (ModuleID) REFERENCES SubjectModule (ModuleID)
 );
 
-
+INSERT INTO  SubjectModuleParticipation(StudID, ModuleID, ModuleNum)
+VALUES (1, 1, 1),
+       (1, 8, 2);
 
 
 -- ----------------------------------------------------------------------------------------------------------------

@@ -192,7 +192,7 @@ public class Controller {
         view.crTotal.setText("Programme Credits: " + totalCredits);
         checkMaxCreditsReached();
 
-        //System.out.println("Credits total : " + model.totalCredits());
+        System.out.println("Credits total : " + model.totalCredits());
     }
 
     private void checkMaxCreditsReached() {
