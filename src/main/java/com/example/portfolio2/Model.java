@@ -28,10 +28,7 @@ class Model {
 
     public void clearCourseParticipation() {
         String deleteStudent = "UPDATE Student SET ProgID = 0 WHERE StudID = 1";
-
         String deleteSubjectModules = "DELETE FROM SubjectModuleParticipation WHERE StudID = 1";
-
-
         String deleteBasicCourses = "DELETE FROM BasicCourseParticipation WHERE StudID = 1";
         String deleteElectives = "DELETE FROM ElectiveParticipation WHERE StudID = 1";
 
