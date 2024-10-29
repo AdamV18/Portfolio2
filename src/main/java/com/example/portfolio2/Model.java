@@ -459,6 +459,57 @@ class Model {
         return credits;
     }
 
+
+    public int basicCourseCredits() {
+        String query = "SELECT IFNULL(SUM(bc.BasCourseECTS), 0) AS basic_course_credits " +
+                "FROM BasicCourse bc " +
+                "JOIN BasicCourseParticipation bcp ON bc.BasCourseID = bcp.BasCourseID " +
+                "WHERE bcp.StudID = 1;";
+
+        return executeCreditQuery(query);
+    }
+
+
+    public int electiveCourseCredits() {
+        String query = "SELECT IFNULL(SUM(ec.ElCourseECTS), 0) AS elective_course_credits " +
+                "FROM ElectiveCourse ec " +
+                "JOIN ElectiveParticipation ep ON ec.ElCourseID = ep.ElCourseID " +
+                "WHERE ep.StudID = 1;";
+
+        return executeCreditQuery(query);
+    }
+
+
+
+    public int subjectModuleCredits(int moduleNum) {
+        String query = "SELECT IFNULL(SUM(mc.ModCourseECTS), 0) + IFNULL(mp.ModProjECTS, 0) AS subject_module_credits " +
+                "FROM ModuleCourse mc " +
+                "JOIN SubjectModuleParticipation smp ON mc.ModuleID = smp.ModuleID " +
+                "LEFT JOIN ModuleProject mp ON mp.ModuleID = smp.ModuleID " +
+                "WHERE smp.StudID = 1 AND smp.ModuleNum = ?;";
+
+        int credits = 0;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, moduleNum); // Set the ModuleNum parameter
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    credits = rs.getInt("subject_module_credits");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+        return credits;
+    }
+
+
+
+
     public int totalCredits() {
         String sumCredit = "SELECT ( " +
                 "    (SELECT IFNULL(SUM(bc.BasCourseECTS), 0) " +
@@ -495,7 +546,6 @@ class Model {
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     totalCredits = rs.getInt("total_ects");
-                    System.out.println("Total credits: " + totalCredits);
                 }
             }
         } catch (SQLException e) {
@@ -506,6 +556,26 @@ class Model {
         return totalCredits;
     }
 
+
+
+    private int executeCreditQuery(String query) {
+        int credits = 0;
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    credits = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection(conn);
+        }
+        return credits;
+    }
 
 }
 

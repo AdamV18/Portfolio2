@@ -16,7 +16,7 @@ public class Controller {
     private int electiveCredits = 0;
     private int totalCredits = 0;
 
-    private final int MAX_CREDITS = 110;
+    private final int MAX_CREDITS = 50;
     private final int MAX_ELECTIVE_CREDITS = 10;
 
     Controller(Model model, HelloApplication view) {
@@ -41,7 +41,7 @@ public class Controller {
             view.comboSub2.getItems().clear();
 
             model.storeProgram(selectedBase);
-            updateTotalCredits();
+            updateCredits();
         });
 
         view.addBasicCourse.setOnAction(event -> {
@@ -55,7 +55,7 @@ public class Controller {
                     view.comboBasicCourse.getItems().remove(selectedCourse);
 
                     model.storeBasicCourse(basicName);
-                    updateBasicCredits(credits);
+                    updateCredits();
                 }
             }
         });
@@ -95,7 +95,7 @@ public class Controller {
                         view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
 
                         model.storeElectiveCourse(electiveName);
-                        updateElectiveCredits(credits);
+                        updateCredits();
                     }
                 }
             }
@@ -105,12 +105,12 @@ public class Controller {
     private void addProjects(String selectedBase) {
         for (Activity project : model.bachelorProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
-            updateBasicCredits(model.getBachelorProjectCredits(project.getActivityName()));
+            updateCredits();
         }
 
         for (Activity baseProject : model.baseProject(selectedBase)) {
             view.textAreaBasicCourse.appendText(baseProject.getActivityECTS() + " - " + baseProject.getActivityName() + "\n");
-            updateBasicCredits(model.getBasicProjectCredits(baseProject.getActivityName()));
+            updateCredits();
         }
     }
 
@@ -137,14 +137,12 @@ public class Controller {
         sub1Credits = 0;
         Activity project = model.subjectProject(subject);
         view.textAreaSub1.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
-        updateSub1Credits(project.getActivityECTS());
 
         List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
             for (Activity course : subjectCourses) {
                 view.textAreaSub1.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
-                updateSub1Credits(course.getActivityECTS());
-
+                updateCredits();
             }
         }
     }
@@ -154,47 +152,35 @@ public class Controller {
         sub2Credits = 0;
         Activity project = model.subjectProject(subject);
         view.textAreaSub2.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
-        updateSub2Credits(project.getActivityECTS());
 
         List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
             for (Activity course : subjectCourses) {
                 view.textAreaSub2.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
-                updateSub2Credits(course.getActivityECTS());
+                updateCredits();
             }
         }
     }
 
-    private void updateBasicCredits(int credits) {
-        basicCredits += credits;
-        view.crBasic.setText("Basic Credits: " + basicCredits);
-        updateTotalCredits();
-    }
 
-    private void updateSub1Credits(int credits) {
-        sub1Credits += credits;
-        view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
-        updateTotalCredits();
-    }
 
-    private void updateSub2Credits(int credits) {
-        sub2Credits += credits;
-        view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
-        updateTotalCredits();
-    }
-
-    private void updateElectiveCredits(int credits) {
-        electiveCredits += credits;
-        view.crElective.setText("Elective Credits: " + electiveCredits);
-        updateTotalCredits();
-    }
-
-    private void updateTotalCredits() {
+    private void updateCredits() {
+        basicCredits = model.basicCourseCredits();
+        sub1Credits = model.subjectModuleCredits(1);
+        sub2Credits = model.subjectModuleCredits(2);
+        electiveCredits = model.electiveCourseCredits();
         totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits;
+
+        view.crBasic.setText("Basic Credits: " + basicCredits);
+        view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
+        view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
+        view.crElective.setText("Elective Credits: " + electiveCredits);
         view.crTotal.setText("Programme Credits: " + totalCredits);
+
+
         checkMaxCreditsReached();
 
-        System.out.println("Credits total : " + model.totalCredits());
+        //System.out.println("Credits total : " + model.totalCredits());
     }
 
     private void checkMaxCreditsReached() {
@@ -225,9 +211,16 @@ public class Controller {
 
         basicCredits = sub1Credits = sub2Credits = electiveCredits = totalCredits = 0;
 
+        view.crBasic.setText("Basic Credits: " + basicCredits);
+        view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
+        view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
+        view.crElective.setText("Elective Credits: " + electiveCredits);
+        view.crTotal.setText("Programme Credits: " + totalCredits);
+
         view.addBasicCourse.setDisable(false);
         view.addElectiveCourse.setDisable(false);
     }
+
 
     private void resetDatabase() {
         model.clearCourseParticipation();

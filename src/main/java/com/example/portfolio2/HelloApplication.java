@@ -37,7 +37,7 @@ public class HelloApplication extends Application {
     public Label crSub1 = createLabel("SubMod 1 Credits: ");
     public Label crSub2 = createLabel("SubMod 2 Credits: ");
     public Label crElective = createLabel("Elective Credits: ");
-    public Label crTotal = createLabel("Total Credits: ");
+    public Label crTotal = createLabel("Programme Credits: ");
 
     @Override
     public void start(Stage stage) {
