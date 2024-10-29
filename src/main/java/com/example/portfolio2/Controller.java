@@ -169,7 +169,8 @@ public class Controller {
         sub1Credits = model.subjectModuleCredits(1);
         sub2Credits = model.subjectModuleCredits(2);
         electiveCredits = model.electiveCourseCredits();
-        totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits;
+        totalCredits = model.totalCredits();
+        //totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits;
 
         view.crBasic.setText("Basic Credits: " + basicCredits);
         view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
