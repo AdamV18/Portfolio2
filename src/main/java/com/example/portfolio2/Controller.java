@@ -135,14 +135,14 @@ public class Controller {
         sub1Credits = 0;
         Activity project = model.subjectProject(subject);
         view.textAreaSub1.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
-        updateSub1Credits(model.getSubjectModuleCredits(project.getActivityID()));
+        updateSub1Credits(project.getActivityECTS());
 
         List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
             for (Activity course : subjectCourses) {
                 view.textAreaSub1.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
-                updateSub1Credits(model.getSubjectModuleCredits(course.getActivityID()));
-                System.out.println(course.getActivityECTS());
+                updateSub1Credits(course.getActivityECTS());
+
             }
         }
     }
@@ -152,13 +152,13 @@ public class Controller {
         sub2Credits = 0;
         Activity project = model.subjectProject(subject);
         view.textAreaSub2.appendText(project.getActivityECTS() + " - " + project.getActivityName() + "\n");
-        updateSub2Credits(model.getSubjectModuleCredits(project.getActivityID()));
+        updateSub2Credits(project.getActivityECTS());
 
         List<Activity> subjectCourses = model.subjectCourse(subject);
         if (subjectCourses != null) {
             for (Activity course : subjectCourses) {
                 view.textAreaSub2.appendText(course.getActivityECTS() + " - " + course.getActivityName() + "\n");
-                updateSub2Credits(model.getSubjectModuleCredits(course.getActivityID()));
+                updateSub2Credits(course.getActivityECTS());
             }
         }
     }
@@ -166,28 +166,28 @@ public class Controller {
     private void updateBasicCredits(int credits) {
         basicCredits += credits;
         view.crBasic.setText("Basic Credits: " + basicCredits);
-        updateTotalCredits(credits);
+        updateTotalCredits();
     }
 
     private void updateSub1Credits(int credits) {
-        sub1Credits = credits;
+        sub1Credits += credits;
         view.crSub1.setText("SubMod 1 Credits: " + sub1Credits);
-        updateTotalCredits(credits);
+        updateTotalCredits();
     }
 
     private void updateSub2Credits(int credits) {
-        sub2Credits = credits;
+        sub2Credits += credits;
         view.crSub2.setText("SubMod 2 Credits: " + sub2Credits);
-        updateTotalCredits(credits);
+        updateTotalCredits();
     }
 
     private void updateElectiveCredits(int credits) {
         electiveCredits += credits;
         view.crElective.setText("Elective Credits: " + electiveCredits);
-        updateTotalCredits(credits);
+        updateTotalCredits();
     }
 
-    private void updateTotalCredits(int credits) {
+    private void updateTotalCredits() {
         totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits;
         view.crTotal.setText("Programme Credits: " + totalCredits);
         checkMaxCreditsReached();
