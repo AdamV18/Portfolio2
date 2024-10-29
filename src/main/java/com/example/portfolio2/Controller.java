@@ -191,6 +191,8 @@ public class Controller {
         totalCredits = basicCredits + sub1Credits + sub2Credits + electiveCredits;
         view.crTotal.setText("Programme Credits: " + totalCredits);
         checkMaxCreditsReached();
+
+        System.out.println("Credits total : " + model.totalCredits());
     }
 
     private void checkMaxCreditsReached() {
