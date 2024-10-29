@@ -67,8 +67,6 @@ public class HelloApplication extends Application {
         root.add(comboSub1, 1, 1);
         root.add(comboSub2, 2, 1);
 
-
-
         root.add(basiccourse, 0, 3);
         root.add(electivecourse, 3, 3);
 
