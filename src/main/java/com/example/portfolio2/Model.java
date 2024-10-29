@@ -102,58 +102,30 @@ class Model {
         }
     }
 
-    public void storeSubjectModule1(String moduleName) {
+
+    public void storeSubjectModule(String moduleName, int moduleNum) {
         String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-
-
-        String clearQuery = "DELETE FROM SubjectModuleParticipation WHERE StudID = 1 AND ModuleNum = 1";
-        String updateQuery = "INSERT INTO SubjectModuleParticipation (StudID, ModuleID, ModuleNum) VALUES (1, ?, 1)";
-
+        String clearQuery = "DELETE FROM SubjectModuleParticipation WHERE StudID = 1 AND ModuleNum = ?";
+        String updateQuery = "INSERT INTO SubjectModuleParticipation (StudID, ModuleID, ModuleNum) VALUES (1, ?, ?)";
 
         Connection conn = null;
         try {
             conn = getConnection();
+
             try (PreparedStatement clearStmt = conn.prepareStatement(clearQuery)) {
+                clearStmt.setInt(1, moduleNum);
                 clearStmt.executeUpdate();
             }
+
             try (PreparedStatement getIdStmt = conn.prepareStatement(getIdQuery)) {
                 getIdStmt.setString(1, moduleName);
                 ResultSet rs = getIdStmt.executeQuery();
                 if (rs.next()) {
                     int moduleId = rs.getInt("ModuleID");
+
                     try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
                         updateStmt.setInt(1, moduleId);
-                        updateStmt.executeUpdate();
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection(conn);
-        }
-
-
-
-    }
-
-    public void storeSubjectModule2(String moduleName) {
-        String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-        String clearQuery = "DELETE FROM SubjectModuleParticipation WHERE StudID = 1 AND ModuleNum = 2";
-        String updateQuery = "INSERT INTO SubjectModuleParticipation (StudID, ModuleID, ModuleNum) VALUES (1, ?, 2)";
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            try (PreparedStatement clearStmt = conn.prepareStatement(clearQuery)) {
-                clearStmt.executeUpdate();
-            }
-            try (PreparedStatement getIdStmt = conn.prepareStatement(getIdQuery)) {
-                getIdStmt.setString(1, moduleName);
-                ResultSet rs = getIdStmt.executeQuery();
-                if (rs.next()) {
-                    int moduleId = rs.getInt("ModuleID");
-                    try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
-                        updateStmt.setInt(1, moduleId);
+                        updateStmt.setInt(2, moduleNum);
                         updateStmt.executeUpdate();
                     }
                 }
@@ -164,6 +136,8 @@ class Model {
             closeConnection(conn);
         }
     }
+
+
 
     public void storeElectiveCourse(String electiveCourse) {
         String getIdQuery = "SELECT ElCourseID FROM ElectiveCourse WHERE ElCourseName = ?";
@@ -486,20 +460,32 @@ class Model {
     }
 
     public int totalCredits() {
-        String sumCredit = "SELECT SUM(" +
-                "bc.BasCourseECTS + bp.BasProjECTS + bachp.BachProjECTS + mc.ModCourseECTS + mp.ModProjECTS + ec.ElCourseECTS)" +
-                " AS total_ects " +
+        String sumCredit = "SELECT ( " +
+                "    (SELECT IFNULL(SUM(bc.BasCourseECTS), 0) " +
+                "     FROM BasicCourse bc " +
+                "     JOIN BasicCourseParticipation bcp ON bc.BasCourseID = bcp.BasCourseID " +
+                "     WHERE bcp.StudID = s.StudID) + " +
+                "    (SELECT IFNULL(SUM(bp.BasProjECTS), 0) " +
+                "     FROM BasicProject bp " +
+                "     WHERE bp.ProgID = s.ProgID) + " +
+                "    (SELECT IFNULL(SUM(bachp.BachProjECTS), 0) " +
+                "     FROM BachelorProject bachp " +
+                "     WHERE bachp.ProgID = s.ProgID) + " +
+                "    (SELECT IFNULL(SUM(mc.ModCourseECTS), 0) " +
+                "     FROM ModuleCourse mc " +
+                "     JOIN SubjectModuleParticipation smp ON mc.ModuleID = smp.ModuleID " +
+                "     WHERE smp.StudID = s.StudID) + " +
+                "    (SELECT IFNULL(SUM(mp.ModProjECTS), 0) " +
+                "     FROM ModuleProject mp " +
+                "     JOIN SubjectModuleParticipation smp ON mp.ModuleID = smp.ModuleID " +
+                "     WHERE smp.StudID = s.StudID) + " +
+                "    (SELECT IFNULL(SUM(ec.ElCourseECTS), 0) " +
+                "     FROM ElectiveCourse ec " +
+                "     JOIN ElectiveParticipation ep ON ec.ElCourseID = ep.ElCourseID " +
+                "     WHERE ep.StudID = s.StudID) " +
+                ") AS total_ects " +
                 "FROM Student s " +
-                "LEFT JOIN BasicCourseParticipation bcp ON s.StudID = bcp.StudID " +
-                "LEFT JOIN SubjectModuleParticipation smp ON s.StudID = smp.StudID " +
-                "LEFT JOIN ElectiveParticipation ep ON s.StudID = ep.StudID " +
-                "LEFT JOIN BasicCourse bc ON bcp.BasCourseID = bc.BasCourseID " +
-                "LEFT JOIN ModuleProject mp ON smp.ModuleID = mp.ModuleID " +
-                "LEFT JOIN ModuleCourse mc ON smp.ModuleID = mc.ModuleID " +
-                "LEFT JOIN ElectiveCourse ec ON ep.ElCourseID = ec.ElCourseID " +
-                "LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID " +
-                "LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID " +
-                "WHERE s.StudID = '1'";
+                "WHERE s.StudID = 1;";
 
         int totalCredits = 0;
         Connection conn = null;
@@ -509,6 +495,7 @@ class Model {
                  ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     totalCredits = rs.getInt("total_ects");
+                    System.out.println("Total credits: " + totalCredits);
                 }
             }
         } catch (SQLException e) {
@@ -518,6 +505,7 @@ class Model {
         }
         return totalCredits;
     }
+
 
 }
 

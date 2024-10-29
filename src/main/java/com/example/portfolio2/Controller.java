@@ -31,15 +31,17 @@ public class Controller {
             String selectedBase = view.comboProgram.getValue();
             resetSelections();
             resetDatabase();
+
             addProjects(selectedBase);
+
             updateComboBasicCourse(selectedBase);
 
             view.comboSub1.getItems().clear();
             view.comboSub1.getItems().addAll(model.subjectModule(selectedBase));
-
             view.comboSub2.getItems().clear();
 
             model.storeProgram(selectedBase);
+            updateTotalCredits();
         });
 
         view.addBasicCourse.setOnAction(event -> {
@@ -51,15 +53,16 @@ public class Controller {
 
                     addSelectedCourseToTextAreaBasicCourse(selectedCourse);
                     view.comboBasicCourse.getItems().remove(selectedCourse);
-                    updateBasicCredits(credits);
 
                     model.storeBasicCourse(basicName);
+                    updateBasicCredits(credits);
                 }
             }
         });
 
         view.comboSub1.setOnAction(event -> {
             selectedSub1 = view.comboSub1.getValue();
+            model.storeSubjectModule(selectedSub1, 1);
             updateTextAreaSub1(selectedSub1);
 
             List<String> allModules = model.subjectModule("null");
@@ -67,14 +70,13 @@ public class Controller {
             view.comboSub2.getItems().clear();
             view.comboSub2.getItems().addAll(allModules);
 
-            model.storeSubjectModule1(selectedSub1);
+
         });
 
         view.comboSub2.setOnAction(event -> {
             selectedSub2 = view.comboSub2.getValue();
+            model.storeSubjectModule(selectedSub2, 2);
             updateTextAreaSub2(selectedSub2);
-
-            model.storeSubjectModule2(selectedSub2);
         });
 
         for (Activity elective : model.electiveCourse()) {
@@ -91,9 +93,9 @@ public class Controller {
 
                         addSelectedCourseToTextAreaElective(selectedElectiveCourse);
                         view.comboElectiveCourse.getItems().remove(selectedElectiveCourse);
-                        updateElectiveCredits(credits);
 
                         model.storeElectiveCourse(electiveName);
+                        updateElectiveCredits(credits);
                     }
                 }
             }
@@ -221,11 +223,7 @@ public class Controller {
         selectedSub1 = null;
         selectedSub2 = null;
 
-        basicCredits = 0;
-        sub1Credits = 0;
-        sub2Credits = 0;
-        electiveCredits = 0;
-        totalCredits = 0;
+        basicCredits = sub1Credits = sub2Credits = electiveCredits = totalCredits = 0;
 
         view.addBasicCourse.setDisable(false);
         view.addElectiveCourse.setDisable(false);

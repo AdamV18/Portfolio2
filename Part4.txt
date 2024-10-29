@@ -40,4 +40,4 @@ FROM Student s
          LEFT JOIN ElectiveCourse ec ON ep.ElCourseID = ec.ElCourseID
          LEFT JOIN BasicProject bp ON s.ProgID = bp.ProgID
          LEFT JOIN BachelorProject bachp ON s.ProgID = bachp.ProgID
-         WHERE s.StudID = '79994';
+         WHERE s.StudID = '1';
