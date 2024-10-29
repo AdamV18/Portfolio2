@@ -28,7 +28,7 @@ class Model {
 
     public void clearCourseParticipation() {
         String deleteStudent = "UPDATE Student SET ProgID = 0 WHERE StudID = 1";
-        String deleteSubjectModules = "UPDATE SubjectModuleParticipation SET ModuleProgID = 0, ModuleChoiceID = 0 WHERE StudID = 1";
+        String deleteSubjectModules = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1";
         String deleteBasicCourses = "DELETE FROM BasicCourseParticipation WHERE StudID = 1";
         String deleteElectives = "DELETE FROM ElectiveParticipation WHERE StudID = 1";
 
@@ -104,8 +104,8 @@ class Model {
 
     public void storeSubjectModule1(String moduleName) {
         String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleProgID = 0 WHERE StudID = 1";
-        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleProgID = ? WHERE StudID = 1";
+        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1, ModuleNum = 1";
+        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ?, ModuleNum = 1 WHERE StudID = 1";
         Connection conn = null;
         try {
             conn = getConnection();
@@ -132,8 +132,8 @@ class Model {
 
     public void storeSubjectModule2(String moduleName) {
         String getIdQuery = "SELECT ModuleID FROM SubjectModule WHERE ModuleName = ?";
-        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleChoiceID = 0 WHERE StudID = 1";
-        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleChoiceID = ? WHERE StudID = 1";
+        String clearQuery = "UPDATE SubjectModuleParticipation SET ModuleID = 0 WHERE StudID = 1, ModuleNum = 2";
+        String updateQuery = "UPDATE SubjectModuleParticipation SET ModuleID = ?, ModuleNum = 2 WHERE StudID = 1";
         Connection conn = null;
         try {
             conn = getConnection();
