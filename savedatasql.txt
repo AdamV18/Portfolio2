@@ -9,7 +9,7 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE BachelorProgramme
 (
     ProgID   INTEGER PRIMARY KEY,
-    ProgName VARCHAR(255) NOT NULL,
+    ProgName TEXT NOT NULL,
     ProgECTS INTEGER      NOT NULL
 );
 
@@ -28,9 +28,9 @@ VALUES (1, 'NatBach', 180),
 CREATE TABLE Student
 (
     StudID      INTEGER PRIMARY KEY,
-    StudName    VARCHAR(255) NOT NULL,
-    StudSurname VARCHAR(255) NOT NULL,
-    StudEmail   VARCHAR(255) NOT NULL UNIQUE,
+    StudName    TEXT NOT NULL,
+    StudSurname TEXT NOT NULL,
+    StudEmail   TEXT NOT NULL UNIQUE,
     ProgID      INTEGER     ,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
 );
@@ -56,7 +56,7 @@ VALUES (79994, 'Julien', 'Perdrix', 'stud-perdrix@ruc.dk', 1),
 CREATE TABLE BasicCourse
 (
     BasCourseID   INTEGER PRIMARY KEY,
-    BasCourseName VARCHAR(255) NOT NULL UNIQUE,
+    BasCourseName TEXT NOT NULL UNIQUE,
     BasCourseECTS INTEGER      NOT NULL,
     ProgID        INTEGER      NOT NULL,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
@@ -143,7 +143,7 @@ VALUES (46, 'Dimension course in Science and Philosophy', 5, 4),
 CREATE TABLE BasicProject
 (
     BasProjID INTEGER PRIMARY KEY,
-    BasProjName  VARCHAR(255) NOT NULL UNIQUE,
+    BasProjName  TEXT NOT NULL UNIQUE,
     BasProjECTS  INTEGER      NOT NULL,
     ProgID       INTEGER      NOT NULL,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
@@ -183,7 +183,7 @@ VALUES (11, 'BP1 GlobalHumanities', 15, 4),
 CREATE TABLE BachelorProject
 (
     BachProjID INTEGER PRIMARY KEY,
-    BachProjName  VARCHAR(255) NOT NULL UNIQUE,
+    BachProjName  TEXT NOT NULL UNIQUE,
     BachProjECTS  INTEGER      NOT NULL,
     ProgID        INTEGER      NOT NULL,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
@@ -205,7 +205,7 @@ VALUES (1, 'NatBach Bachelor Project', 15, 1),
 CREATE TABLE SubjectModule
 (
     ModuleID   INTEGER PRIMARY KEY,
-    ModuleName VARCHAR(255) NOT NULL UNIQUE,
+    ModuleName TEXT NOT NULL UNIQUE,
     ModuleECTS INTEGER      NOT NULL,
     ProgID     INTEGER      NOT NULL,
     FOREIGN KEY (ProgID) REFERENCES BachelorProgramme (ProgID)
@@ -235,7 +235,7 @@ VALUES (1, 'Computer Science', 35, 1),
 CREATE TABLE ModuleCourse
 (
     ModCourseID   INTEGER PRIMARY KEY,
-    ModCourseName VARCHAR(255) NOT NULL UNIQUE,
+    ModCourseName TEXT NOT NULL UNIQUE,
     ModCourseECTS INTEGER      NOT NULL,
     ModuleID      INTEGER      NOT NULL,
     FOREIGN KEY (ModuleID) REFERENCES SubjectModule (ModuleID)
@@ -332,7 +332,7 @@ VALUES (41, 'Essential Astronomy', 5, 12),
 CREATE TABLE ModuleProject
 (
     ModProjID   INTEGER PRIMARY KEY,
-    ModProjName VARCHAR(255) NOT NULL UNIQUE,
+    ModProjName TEXT NOT NULL UNIQUE,
     ModProjECTS INTEGER      NOT NULL,
     ModuleID       INTEGER      NOT NULL,
     FOREIGN KEY (ModuleID) REFERENCES SubjectModule (ModuleID)
@@ -362,8 +362,8 @@ VALUES (1, 'Subject module project in Computer Science', 15, 1),
 CREATE TABLE ElectiveCourse
 (
     ElCourseID   INTEGER PRIMARY KEY,
-    ElCourseName VARCHAR(255) NOT NULL UNIQUE,
-    Type         VARCHAR(255) NOT NULL,
+    ElCourseName TEXT NOT NULL UNIQUE,
+    Type         TEXT NOT NULL,
     ElCourseECTS INTEGER      NOT NULL
 );
 
